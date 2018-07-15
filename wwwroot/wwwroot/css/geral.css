@@ -1,0 +1,15 @@
+﻿body {
+}
+
+/* Icons */
+.icon {
+    height: 30px;
+    width: 30px;
+    background-size: contain !important; 
+}
+.icon-home {
+    background: url(/img/icons/home.svg) center no-repeat;    
+}
+.content-page {    
+    padding:10px
+}
