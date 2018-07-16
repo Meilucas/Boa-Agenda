@@ -31,6 +31,24 @@ namespace wwwroot.usuario {
         protected global::System.Web.UI.WebControls.TextBox txtSobreNome;
         
         /// <summary>
+        /// Controle txtCPF.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCPF;
+        
+        /// <summary>
+        /// Controle txtRG.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRG;
+        
+        /// <summary>
         /// Controle txtCep.
         /// </summary>
         /// <remarks>
