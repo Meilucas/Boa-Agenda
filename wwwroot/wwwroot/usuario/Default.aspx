@@ -1,16 +1,9 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="wwwroot.usuario.Default" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="wwwroot.usuario.Default" MasterPageFile="~/Master.Master" %>
 
-<!DOCTYPE html>
+<asp:Content ContentPlaceHolderID="body" runat="server" >
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
-</head>
-<body>
-    <form id="form1" runat="server">
-        <div>
-        </div>
-    </form>
-</body>
-</html>
+    <asp:TextBox runat="server" ID="txtPesquisa" />
+    <asp:GridView runat="server" AutoGenerateColumns="false" ID="gdvUser">
+
+    </asp:GridView>
+</asp:Content>

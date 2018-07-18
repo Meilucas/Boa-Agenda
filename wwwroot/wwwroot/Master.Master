@@ -37,6 +37,9 @@
                     </div>
                 </nav>
             </header>
+            <script src="/scripts/jquery.js"></script>
+            <script src="/scripts/popper.js"></script>
+            <script src="/scripts/bootstrap.js"></script>
             <div class="container content-page">
                 <asp:ContentPlaceHolder ID="body" runat="server">
                 </asp:ContentPlaceHolder>
@@ -46,9 +49,6 @@
             </div>
         </div>
     </form>
-    <script src="/scripts/jquery.js"></script>
-    <script src="/scripts/popper.js"></script>
 
-    <script src="/scripts/bootstrap.js"></script>
 </body>
 </html>
