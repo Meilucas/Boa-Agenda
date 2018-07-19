@@ -22,13 +22,13 @@ namespace wwwroot.usuario {
         protected global::System.Web.UI.WebControls.TextBox txtPesquisa;
         
         /// <summary>
-        /// Controle btnEnviar.
+        /// Controle btnPequisar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnEnviar;
+        protected global::System.Web.UI.WebControls.ImageButton btnPequisar;
         
         /// <summary>
         /// Controle gdvUser.

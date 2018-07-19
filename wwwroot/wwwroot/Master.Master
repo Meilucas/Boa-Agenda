@@ -13,13 +13,15 @@
 </head>
 <body>
     <form id="form1" runat="server">
+        <asp:ScriptManager runat="server" ID="sct" />
         <div>
             <header class="">
                 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
                     <a class="navbar-brand" href="#">
                         <div class="icon icon-home"></div>
                     </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menunav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <a runat="server" visible="false" id="lblname" class=" navbar-brand" style="color: white">nome</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="menunav">
@@ -34,9 +36,62 @@
                                 <a class="nav-link" href="#">Disabled</a>
                             </li>
                         </ul>
+
+                        <ul class="navbar-nav">
+                            <li class="nav-item float-lg-right">
+                                <a class="nav-link" href="#" data-toggle="modal" data-target=".modal" runat="server" id="lnkLogin">Login</a>
+
+                            </li>
+                            <li>
+                                <asp:LinkButton Text="Sair" runat="server" Visible="false" ID="btnLogout" CssClass="nav-link" OnClick="btnLogout_Click" /></li>
+                        </ul>
                     </div>
                 </nav>
+
             </header>
+
+
+            <div class="modal fade" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Login</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <asp:UpdatePanel runat="server" ID="pnlLogin">
+                            <ContentTemplate>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <asp:TextBox runat="server" ID="txtLogin" CssClass="form-control" placeholder="Login" />
+                                        <asp:RequiredFieldValidator ErrorMessage="Campo Obrigatorio" ControlToValidate="txtLogin" runat="server" ForeColor="Red" ValidationGroup="login" Display="Dynamic" BorderColor="Red" />
+                                    </div>
+                                    <div class="form-group">
+                                        <asp:TextBox runat="server" ID="txtSenha" CssClass="form-control" placeholder="Senha" TextMode="Password" />
+                                        <asp:RequiredFieldValidator ErrorMessage="Campo Obrigatorio" ControlToValidate="txtSenha" runat="server" ForeColor="Red" ValidationGroup="login" Display="Dynamic" BorderColor="Red" />
+                                    </div>
+                                    <asp:Label Text="text" runat="server" Visible="false" ID="lblMsg" />
+                                    <asp:UpdateProgress runat="server" AssociatedUpdatePanelID="pnlLogin">
+                                        <ProgressTemplate>
+                                            <img src="img/loading.gif" />
+                                        </ProgressTemplate>
+                                    </asp:UpdateProgress>
+                                    <div class="form-group">
+                                        <input type="button" name="Cancelar" value="Fechar" class="btn btn-outline-info" data-dismiss="modal" />
+                                        <asp:Button Text="Entrar" runat="server" CssClass="btn btn-outline-success" ID="btnEntrar" OnClick="btnEntrar_Click" ValidationGroup="login" />
+                                    </div>
+                                </div>
+
+
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+
+                    </div>
+                </div>
+            </div>
+
+
             <script src="/scripts/jquery.js"></script>
             <script src="/scripts/popper.js"></script>
             <script src="/scripts/bootstrap.js"></script>

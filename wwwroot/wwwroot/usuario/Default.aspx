@@ -4,9 +4,20 @@
 
     <div>
         <asp:TextBox runat="server" ID="txtPesquisa" />
-        <asp:ImageButton ImageUrl="imageurl" AlternateText="pesquisar" runat="server" ID="btnEnviar" />
+        <asp:ImageButton ImageUrl="~/img/icons/lupa.png" AlternateText="pesquisar" runat="server" ID="btnPequisar" OnClick="btnPequisar_Click" />
     </div>
 
-    <asp:GridView runat="server" AutoGenerateColumns="false" ID="gdvUser">
-    </asp:GridView>
+    <div class="table-responsive">
+        <asp:GridView runat="server" ID="gdvUser" AutoGenerateColumns="False" CssClass=" table table-hover" OnSelectedIndexChanging="gdvUser_SelectedIndexChanging">
+            <Columns>
+                <asp:BoundField HeaderText="Id" DataField="id_usuario" />
+                <asp:BoundField HeaderText="Nome" DataField="nome" />
+                <asp:BoundField HeaderText="Sobrenome" DataField="sobrenome" />
+                <asp:BoundField HeaderText="Email" DataField="email" />
+                <asp:BoundField HeaderText="Cpf" DataField="cpf" />
+                <asp:BoundField HeaderText="RG" DataField="rg" />              
+                <asp:CommandField  HeaderText="#" ShowSelectButton="true"  />
+            </Columns>
+        </asp:GridView>
+    </div>
 </asp:Content>

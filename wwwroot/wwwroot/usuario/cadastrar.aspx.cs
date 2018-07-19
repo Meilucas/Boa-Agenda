@@ -14,11 +14,43 @@ namespace wwwroot.usuario
         string szConnection = "Server=127.0.0.1;Database=boa_agenda;Uid=root;Pwd=root;";
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["tipo"] == null)
+
+            if (Session["tipo"] != null)
             {
                 if (Session["tipo"].ToString() == "root")
                 {
                     pnlTipoUsuario.Visible = true;
+                }
+            }
+            if (!IsPostBack)
+            {
+
+
+                // Verificar se a pagina é de edição ou cadastro 
+                // verifica se é edição do administrador
+                if (Request.QueryString["id"] != null)
+                {
+                    try
+                    {
+                        if (Session["tipo"] != null)
+                        {
+                            if (Session["tipo"].ToString() != "root")
+                                Response.Write("<script>alert('você não tem permição para editar esse cadastro');window.location.href = '/'</script>");
+                            Session["IdEdicao"] = Convert.ToInt32(Request.QueryString["id"]);
+                            PreencheCampos((int)Session["IdEdicao"]);
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Response.Write("<script>alert('id invalido');</script>");
+                        return;
+                    }
+                }
+                else if (Session["id"] != null)  //verifica se o usuario esta logado
+                {
+                    Session["IdEdicao"] = Convert.ToInt32(Session["id"]);
+                    PreencheCampos((int)Session["IdEdicao"]);
                 }
             }
         }
@@ -40,10 +72,11 @@ namespace wwwroot.usuario
                 Response.Write("<script>alert('a senha não podem ser nulas');</script>");
                 return;
             }
-            if (Session["id"] == null)
+
+            if (Session["IdEdicao"] == null)
                 Salvar();
             else
-                Editar();
+                Editar((int)Session["IdEdicao"]);
         }
         private void Salvar()
         {
@@ -65,30 +98,35 @@ namespace wwwroot.usuario
             cmd.Parameters.AddWithValue("_endereco", txtEndereco.Text);
             cmd.Parameters.AddWithValue("_cpf", txtCPF.Text);
             cmd.Parameters.AddWithValue("_rg", txtRG.Text);
+            cmd.Parameters.AddWithValue("_tipo", ddlTipo.SelectedValue);
             try
             {
                 con.Open();
                 string msg = cmd.ExecuteScalar().ToString();
                 con.Close();
-                Response.Write("<script>alert('" + msg + "');</script>");
+                if (msg.Contains("sucesso"))
+                {
+                    Response.Write("<script>alert('" + msg + "');window.location.href = '/'</script>");
+                }
+                else
+                    Response.Write("<script>alert('" + msg + "');</script>");
 
             }
             catch (Exception ex)
             {
                 Response.Write("<script>alert('erro " + ex.Message + "');</script>");
             }
-
         }
 
-        private void Editar()
+        private void Editar(int id)
         {
+
             MySqlCommand cmd = new MySqlCommand();
             MySqlConnection con = new MySqlConnection(szConnection);
-
             cmd.Connection = con;
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "pr_up_user";
-            cmd.Parameters.AddWithValue("_id", Session["id"].ToString());
+            cmd.Parameters.AddWithValue("_id", id);
             cmd.Parameters.AddWithValue("_nome", txtNome.Text);
             cmd.Parameters.AddWithValue("_sobrenome", txtSobreNome.Text);
             cmd.Parameters.AddWithValue("_cep", txtCep.Text);
@@ -101,13 +139,58 @@ namespace wwwroot.usuario
             cmd.Parameters.AddWithValue("_endereco", txtEndereco.Text);
             cmd.Parameters.AddWithValue("_cpf", txtCPF.Text);
             cmd.Parameters.AddWithValue("_rg", txtRG.Text);
-            cmd.Parameters.AddWithValue("_tipo", );
+            cmd.Parameters.AddWithValue("_tipo", ddlTipo.SelectedValue);
             try
             {
                 con.Open();
                 string msg = cmd.ExecuteScalar().ToString();
                 con.Close();
-                Response.Write("<script>alert('" + msg + "');</script>");
+                if (msg.Contains("sucesso"))
+                {
+                    Session.Remove("IdEdicao");
+                    Response.Write("<script>alert('" + msg + "');window.location.href = '/'</script>");
+                }
+                else
+                    Response.Write("<script>alert('" + msg + "');</script>");
+            }
+            catch (Exception ex)
+            {
+                Response.Write("<script>alert('erro " + ex.Message + "');</script>");
+            }
+        }
+        public void PreencheCampos(int id)
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            MySqlConnection con = new MySqlConnection(szConnection);
+            cmd.Connection = con;
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "select * from usuarios where id_usuario = " + id;
+            try
+            {
+                con.Open();
+                MySqlDataReader rd = cmd.ExecuteReader();
+
+
+                while (rd.Read())
+                {
+                    txtNome.Text = rd["nome"].ToString();
+                    txtSobreNome.Text = rd["sobrenome"].ToString();
+                    txtCep.Text = rd["cep"].ToString();
+                    txtTelefone.Text = rd["telefone"].ToString();
+                    txtCel.Text = rd["celular"].ToString();
+                    txtnumero.Text = rd["numero"].ToString();
+                    txtEmail.Text = rd["email"].ToString();
+                    txtLogin.Text = rd["login"].ToString();
+                    txtSenha.TextMode = TextBoxMode.SingleLine;
+                    txtSenha.Text = rd["senha"].ToString();
+                    txtSenha2.TextMode = TextBoxMode.SingleLine;
+                    txtSenha2.Text = rd["senha"].ToString();
+                    txtEndereco.Text = rd["endereco"].ToString();
+                    txtCPF.Text = rd["cpf"].ToString();
+                    txtRG.Text = rd["rg"].ToString();
+                    ddlTipo.SelectedValue = rd["tipo"].ToString();
+                }
+                con.Close();
             }
             catch (Exception ex)
             {
