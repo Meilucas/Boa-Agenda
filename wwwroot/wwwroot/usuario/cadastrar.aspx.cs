@@ -12,9 +12,9 @@ namespace wwwroot.usuario
     public partial class cadastrar : System.Web.UI.Page
     {
         string szConnection = "Server=127.0.0.1;Database=boa_agenda;Uid=root;Pwd=root;";
+
         protected void Page_Load(object sender, EventArgs e)
         {
-
             if (Session["tipo"] != null)
             {
                 if (Session["tipo"].ToString() == "root")
@@ -24,8 +24,7 @@ namespace wwwroot.usuario
             }
             if (!IsPostBack)
             {
-
-
+                CarregaEspecialidades("");
                 // Verificar se a pagina é de edição ou cadastro 
                 // verifica se é edição do administrador
                 if (Request.QueryString["id"] != null)
@@ -54,7 +53,31 @@ namespace wwwroot.usuario
                 }
             }
         }
+        void CarregaEspecialidades(string strExp)
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cmd = new MySqlCommand();
+            MySqlConnection con = new MySqlConnection(szConnection);
+            cmd.Connection = con;
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "SELECT * FROM especialidade order by especialidade";
 
+            try
+            {
+                con.Open();
+                cmd.ExecuteScalar();
+                MySqlDataAdapter ad = new MySqlDataAdapter(cmd);
+                ad.Fill(dt);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            lstEspecialidade.DataSource = dt;
+            lstEspecialidade.DataValueField = "id_especialidade";
+            lstEspecialidade.DataTextField = "especialidade";
+            lstEspecialidade.DataBind();
+        }
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
             if (!Page.IsValid)

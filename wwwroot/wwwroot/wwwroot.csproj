@@ -80,6 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="agenda\Default.aspx" />
+    <Content Include="css\jquery-ui.css" />
+    <Content Include="css\jquery-ui.structure.css" />
+    <Content Include="css\jquery-ui.theme.css" />
     <Content Include="img\icons\lupa.png" />
     <Content Include="img\loading.gif" />
     <Content Include="Master.Master" />
@@ -98,6 +101,7 @@
     <Content Include="Default.aspx" />
     <Content Include="img\icons\home.svg" />
     <Content Include="scripts\bootstrap.js" />
+    <Content Include="scripts\jquery-ui.js" />
     <Content Include="scripts\jquery.js" />
     <Content Include="scripts\jquery.mask.min.js" />
     <Content Include="scripts\popper-utils.min.js" />

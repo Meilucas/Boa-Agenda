@@ -6,6 +6,7 @@
             width: 100% !important
         }
     </style>
+    <link href="/css/jquery-ui.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content runat="server" ContentPlaceHolderID="body">
     <fieldset>
@@ -81,6 +82,13 @@
         </div>
     </fieldset>
     <fieldset>
+        <legend>Especialidade</legend>
+        <asp:ListBox runat="server" ID="lstEspecialidade" SelectionMode="Multiple" Rows="7" CssClass="sortable"></asp:ListBox>
+        <a href="#" id="btnRemove">Remover</a>
+        <a href="#" id="btnAdicionar">Adicionar</a>
+        <asp:ListBox runat="server" ID="lstLista" SelectionMode="Multiple" Rows="7" CssClass="sortable"></asp:ListBox>
+    </fieldset>
+    <fieldset>
         <legend>Acesso</legend>
         <div class="form-group">
             <div class="form-inline">
@@ -118,6 +126,16 @@
             $('.numero').mask('0000');
             $('.tel').mask('(00) 0000-0000');
             $('.cel').mask('(00) 00000-0000');
+        });
+    </script>
+</asp:Content>
+<asp:Content runat="server" ContentPlaceHolderID="footer">
+    <script src="/scripts/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#body_lstEspecialidade, #body_lstLista").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
         });
     </script>
 </asp:Content>
