@@ -6,7 +6,7 @@
             width: 100% !important
         }
     </style>
-    <link href="/css/jquery-ui.css" rel="stylesheet" />
+
 </asp:Content>
 <asp:Content runat="server" ContentPlaceHolderID="body">
     <fieldset>
@@ -46,7 +46,7 @@
             <div class="form-inline">
                 <label class="col-sm-1" for="txtCep">Cep*</label>
                 <div class="col-md-3 ">
-                    <asp:TextBox runat="server" CssClass="form-control" ID="txtCep" />
+                    <asp:TextBox runat="server" CssClass="form-control cep" ID="txtCep" />
                     <asp:RequiredFieldValidator ErrorMessage="CEP" ControlToValidate="txtCep" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" />
                 </div>
                 <label class="col-sm-1" for="txtEndereco">Endereço</label>
@@ -118,24 +118,29 @@
     <asp:ValidationSummary runat="server" ValidationGroup="validation" ForeColor="Red" HeaderText="Campos invalidos" />
     <asp:Button Text="Salvar" runat="server" ID="btnSalvar" OnClick="btnSalvar_Click" ValidationGroup="validation" CssClass="btn btn-success" />
     <script src="/scripts/jquery.mask.min.js"></script>
-    <script>
-        $(function () {
-            $('.cpf').mask('000.000.000-00');
-            $('.rg').mask('00.000.000-00');
 
-            $('.numero').mask('0000');
-            $('.tel').mask('(00) 0000-0000');
-            $('.cel').mask('(00) 00000-0000');
-        });
-    </script>
 </asp:Content>
 <asp:Content runat="server" ContentPlaceHolderID="footer">
     <script src="/scripts/jquery-ui.js"></script>
+    <script src="/scripts/jquery.selectlistactions.js"></script>
     <script>
         $(function () {
-            $("#body_lstEspecialidade, #body_lstLista").sortable({
-                connectWith: ".connectedSortable"
-            }).disableSelection();
+            $("#btnRemove").on("click", function () {
+                $('select').moveToListAndDelete('#body_lstLista', '#body_lstEspecialidade');
+                e.preventDefault();
+            })
+            $("#btnAdicionar").on("click", function () {
+                $('select').moveToListAndDelete('#body_lstEspecialidade', '#body_lstLista');
+                e.preventDefault();
+            });
+
+            $('.cpf').mask('000.000.000-00');
+            $('.rg').mask('00.000.000-00');
+            $('.numero').mask('0000');
+            $('.tel').mask('(00) 0000-0000');
+            $('.cel').mask('(00) 00000-0000');
+            $('.cep').mask('00.00000-00');
         });
     </script>
+
 </asp:Content>

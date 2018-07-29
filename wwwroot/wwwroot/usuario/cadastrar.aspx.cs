@@ -60,8 +60,7 @@ namespace wwwroot.usuario
             MySqlConnection con = new MySqlConnection(szConnection);
             cmd.Connection = con;
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT * FROM especialidade order by especialidade";
-
+            cmd.CommandText = "SELECT * FROM especialidade order by especialidade"; 
             try
             {
                 con.Open();

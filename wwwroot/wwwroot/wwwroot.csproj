@@ -104,6 +104,7 @@
     <Content Include="scripts\jquery-ui.js" />
     <Content Include="scripts\jquery.js" />
     <Content Include="scripts\jquery.mask.min.js" />
+    <Content Include="scripts\jquery.selectlistactions.js" />
     <Content Include="scripts\popper-utils.min.js" />
     <Content Include="scripts\popper.js" />
     <Content Include="usuario\cadastrar.aspx" />
