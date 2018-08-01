@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `boa_agenda` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
 USE `boa_agenda`;
--- MySQL dump 10.13  Distrib 8.0.11, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.12, for Win64 (x86_64)
 --
 -- Host: localhost    Database: boa_agenda
 -- ------------------------------------------------------
--- Server version	8.0.11
+-- Server version	8.0.12
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -57,9 +57,9 @@ DROP TABLE IF EXISTS `especialidade`;
 CREATE TABLE `especialidade` (
   `id_especialidade` int(11) NOT NULL AUTO_INCREMENT,
   `especialidade` varchar(50) DEFAULT NULL,
-  `tipo_documento` varchar(4) DEFAULT NULL,
+  `documento` varchar(4) NOT NULL DEFAULT 'CRM',
   PRIMARY KEY (`id_especialidade`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,7 +68,7 @@ CREATE TABLE `especialidade` (
 
 LOCK TABLES `especialidade` WRITE;
 /*!40000 ALTER TABLE `especialidade` DISABLE KEYS */;
-INSERT INTO `especialidade` VALUES (1,'Anatomia','CRM'),(2,'Patológica','CRM'),(3,'Anestesiologia','CRM'),(4,'Anestesiologia','CRM'),(5,'Angiologia e Cirurgia','CRM'),(6,'Vascular','CRM'),(7,'Cardiologia','CRM'),(8,'Cardiologia Pediátrica','CRM');
+INSERT INTO `especialidade` VALUES (1,'Anatomia','CRM'),(2,'Patológica','CRM'),(4,'Anestesiologia','CRM'),(5,'Angiologia e Cirurgia','CRM'),(6,'Vascular','CRM'),(7,'Cardiologia','CRM'),(8,'Cardiologia Pediátrica','CRM'),(9,'Arrancar Dente','CRO');
 /*!40000 ALTER TABLE `especialidade` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -93,12 +93,9 @@ CREATE TABLE `medico` (
   `endereco` varchar(70) DEFAULT NULL,
   `cpf` varchar(15) DEFAULT NULL,
   `rg` varchar(15) DEFAULT NULL,
-  `especialidade` int(11) DEFAULT NULL,
   `documento` varchar(12) DEFAULT NULL,
-  PRIMARY KEY (`id_medico`),
-  KEY `FK_especialidade` (`especialidade`),
-  CONSTRAINT `FK_especialidade` FOREIGN KEY (`especialidade`) REFERENCES `especialidade` (`id_especialidade`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id_medico`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,7 +104,35 @@ CREATE TABLE `medico` (
 
 LOCK TABLES `medico` WRITE;
 /*!40000 ALTER TABLE `medico` DISABLE KEYS */;
+INSERT INTO `medico` VALUES (1,'Cabrito','Teves','08690186','148','15','15','15','15','15','15','15','15','CRM');
 /*!40000 ALTER TABLE `medico` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `medicoespecialidade`
+--
+
+DROP TABLE IF EXISTS `medicoespecialidade`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `medicoespecialidade` (
+  `medico_id` int(11) NOT NULL,
+  `especialidade_id` int(11) NOT NULL,
+  PRIMARY KEY (`medico_id`,`especialidade_id`),
+  KEY `FK_especialidade` (`especialidade_id`),
+  CONSTRAINT `FK_especialidade` FOREIGN KEY (`especialidade_id`) REFERENCES `especialidade` (`id_especialidade`),
+  CONSTRAINT `FK_medico` FOREIGN KEY (`medico_id`) REFERENCES `medico` (`id_medico`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `medicoespecialidade`
+--
+
+LOCK TABLES `medicoespecialidade` WRITE;
+/*!40000 ALTER TABLE `medicoespecialidade` DISABLE KEYS */;
+INSERT INTO `medicoespecialidade` VALUES (1,1),(1,2);
+/*!40000 ALTER TABLE `medicoespecialidade` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -212,8 +237,7 @@ IN `_login` VARCHAR(8),
  IN `_senha` VARCHAR(8),
  IN `_endereco` VARCHAR(70), 
  IN `_cpf` VARCHAR(15), 
- IN `_rg` VARCHAR(15), 
- IN `_tipo` INT)
+ IN `_rg` VARCHAR(15))
 begin
 DECLARE EXIT HANDLER for SQLEXCEPTION
 begin
@@ -235,7 +259,7 @@ end;
             ,`endereco`
             ,`cpf`
             ,`rg`
-        	,`tipo`) 
+        	) 
             VALUES (
             `_nome`
             ,`_sobrenome`
@@ -248,8 +272,7 @@ end;
             ,`_senha`
             ,`_endereco`
             ,`_cpf`
-            ,`_rg`
-            ,`_tipo`
+            ,`_rg`            
             );
 		SELECT 'Cadastro realizado com sucesso';
 	else
@@ -287,8 +310,7 @@ IN `_nome` VARCHAR(50),
  IN `_senha` VARCHAR(8), 
  IN `_endereco` VARCHAR(70), 
  IN `_cpf` VARCHAR(15), 
- IN `_rg` VARCHAR(15), 
- IN `_tipo` INT)
+ IN `_rg` VARCHAR(15))
 BEGIN
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -310,8 +332,7 @@ SET
     `senha` = `_senha`,
     `endereco` = `_endereco`,
     `cpf` = `_cpf`,
-    `rg` = `_rg`,
-    `tipo` = `_tipo`
+    `rg` = `_rg`    
 WHERE
     `id_usuario` = `_id`;
 SELECT
@@ -335,4 +356,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-07-22 12:08:06
+-- Dump completed on 2018-08-01 18:31:48

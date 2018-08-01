@@ -100,6 +100,8 @@
     <Content Include="css\geral.css" />
     <Content Include="Default.aspx" />
     <Content Include="img\icons\home.svg" />
+    <Content Include="medico\cadastrar.aspx" />
+    <Content Include="medico\Default.aspx" />
     <Content Include="scripts\bootstrap.js" />
     <Content Include="scripts\jquery-ui.js" />
     <Content Include="scripts\jquery.js" />
@@ -132,6 +134,20 @@
     </Compile>
     <Compile Include="Master.Master.designer.cs">
       <DependentUpon>Master.Master</DependentUpon>
+    </Compile>
+    <Compile Include="medico\cadastrar.aspx.cs">
+      <DependentUpon>cadastrar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="medico\cadastrar.aspx.designer.cs">
+      <DependentUpon>cadastrar.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="medico\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="medico\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="usuario\cadastrar.aspx.cs">

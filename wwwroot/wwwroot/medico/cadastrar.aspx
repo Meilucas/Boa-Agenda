@@ -1,5 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="cadastrar.aspx.cs" Inherits="wwwroot.usuario.cadastrar" MasterPageFile="~/Master.Master" %>
-
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="cadastrar.aspx.cs" Inherits="wwwroot.medico.cadastrar" MasterPageFile="~/Master.Master" %>
 <asp:Content runat="server" ContentPlaceHolderID="head">
     <style>
         .form-control {
@@ -38,7 +37,23 @@
                     <asp:RequiredFieldValidator ErrorMessage="CPF" ControlToValidate="txtRG" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" />
                 </div>
             </div>
-        </div>    
+        </div>
+        <div>
+            <asp:Panel runat="server" ID="pnlTipoUsuario" Visible="false">
+                <div class="col-6">
+                    <asp:DropDownList runat="server" ID="ddlTipo" CssClass="form-control" OnSelectedIndexChanged="ddlTipo_SelectedIndexChanged">
+                        <asp:ListItem Text="Usuario" Value="0" />
+                        <asp:ListItem Text="Medico ou Dentista" Value="1" />
+                    </asp:DropDownList>
+                </div>
+                <div class="col-6">
+                    <asp:DropDownList runat="server" ID="ddlDocumento" Visible="false" CssClass="form-control" OnSelectedIndexChanged="ddlDocumento_SelectedIndexChanged">
+                        <asp:ListItem Text="Medico" Value="CRM" />
+                        <asp:ListItem Text="Dentista" Value="CRO" />
+                    </asp:DropDownList>
+                </div>
+            </asp:Panel>
+        </div>
     </fieldset>
     <fieldset>
         <legend>Endereco</legend>
@@ -80,7 +95,14 @@
                 </div>
             </div>
         </div>
-    </fieldset>   
+    </fieldset>
+    <fieldset runat="server" id="pnlEspecialidade" visible="false">
+        <legend>Especialidade</legend>
+        <asp:ListBox runat="server" ID="lstEspecialidade" SelectionMode="Multiple" Rows="7" CssClass="sortable"></asp:ListBox>
+        <a href="#" id="btnRemove">Remover</a>
+        <a href="#" id="btnAdicionar">Adicionar</a>
+        <asp:ListBox runat="server" ID="lstLista" SelectionMode="Multiple" Rows="7" CssClass="sortable"></asp:ListBox>
+    </fieldset>
     <fieldset>
         <legend>Acesso</legend>
         <div class="form-group">
