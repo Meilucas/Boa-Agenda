@@ -18,8 +18,8 @@ namespace wwwroot.usuario
             if (Session["tipo"] != null)
             {
                 if (Session["tipo"].ToString() == "0")
-                {                  
-                    pnlEspecialidade.Visible = true;
+                {
+                    //   pnlEspecialidade.Visible = true;
                 }
             }
             if (!IsPostBack)
@@ -32,14 +32,14 @@ namespace wwwroot.usuario
                     {
                         if (Session["tipo"] != null)
                         {
-                            if (Session["tipo"].ToString() != "root")
+                            if (Session["tipo"].ToString() != "0")
                                 Response.Write("<script>alert('você não tem permição para editar esse cadastro');window.location.href = '/'</script>");
                             Session["IdEdicao"] = Convert.ToInt32(Request.QueryString["id"]);
-                            PreencheCampos((int)Session["IdEdicao"]);                          
+                            PreencheCampos((int)Session["IdEdicao"]);
                         }
                         else
                         {
-                            Response.Write("<script>alert('você não tem permição para editar esse cadastro');window.location.href = '/'</script>");
+                            Response.Write("<script>alert('Você precisa esta logado realizar essa ação');window.location.href = '/'</script>");
                         }
 
                     }
@@ -49,17 +49,30 @@ namespace wwwroot.usuario
                         return;
                     }
                 }
-                else if (Session["id"] != null && Session["tipo"].ToString() != "0")  //verifica se o usuario esta logado
+                else if (Session["id"] != null)  //verifica se o usuario esta logado
                 {
-                    Session["IdEdicao"] = Convert.ToInt32(Session["id"]);
-                    PreencheCampos((int)Session["IdEdicao"]);
+                    if (Session["tipo"].ToString() == "1") //verifica se é um usuario ou 
+                    {
+                        Session["IdEdicao"] = Convert.ToInt32(Session["id"]);
+                        PreencheCampos((int)Session["IdEdicao"]);
+                    }
+                    else if (Session["tipo"].ToString() == "0") // se for administrador ele não faz nada
+                        return;
+                    else
+                    {
+                        Response.Write("<script>alert('Você precisa esta logado realizar essa ação');window.location.href = '/'</script>");
+                    }
                 }
             }
         }
-      
+
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (!Page.IsValid)
+            if (!ValidaDados())
+            {
+                return;
+            }
+            else if (!Page.IsValid)
             {
                 Response.Write("<script>alert('preencha todos os campos corretamente');</script>");
                 return;
@@ -121,7 +134,25 @@ namespace wwwroot.usuario
                 Response.Write("<script>alert('erro " + ex.Message + "');</script>");
             }
         }
-
+        private bool ValidaDados()
+        {
+            if (txtCPF.Text.Length < 13)
+            {
+                Response.Write("<script>alert(' CPF invalido');</script>");
+                return false;
+            }
+            else if (txtRG.Text.Length < 12)
+            {
+                Response.Write("<script>alert(' RG invalido');</script>");
+                return false;
+            }
+            else if (txtCep.Text.Length < 10)
+            {
+                Response.Write("<script>alert(' CEP invalido');</script>");
+                return false;
+            }
+            return true;
+        }
         private void Editar(int id)
         {
 
@@ -152,14 +183,14 @@ namespace wwwroot.usuario
                 if (msg.Contains("sucesso"))
                 {
                     Session.Remove("IdEdicao");
-                    Response.Write("<script>alert('" + msg + "');window.location.href = '/'</script>");
+                    Response.Write("<script>alert('" + msg + "');</script>");
                 }
                 else
-                    Response.Write("<script>alert('" + msg + "');</script>");
+                    Response.Write("<script>alert(\"" + msg + "\");</script>");
             }
             catch (Exception ex)
             {
-                Response.Write("<script>alert('erro " + ex.Message + "');</script>");
+                Response.Write("<script>alert(\"erro " + ex.Message + "\");</script>");
             }
         }
         public void PreencheCampos(int id)
@@ -192,7 +223,7 @@ namespace wwwroot.usuario
                     txtEndereco.Text = rd["endereco"].ToString();
                     txtCPF.Text = rd["cpf"].ToString();
                     txtRG.Text = rd["rg"].ToString();
-                 
+
                 }
                 con.Close();
             }
@@ -202,6 +233,6 @@ namespace wwwroot.usuario
             }
         }
 
-     
+
     }
 }

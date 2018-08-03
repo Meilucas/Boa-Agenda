@@ -104,7 +104,7 @@ CREATE TABLE `medico` (
 
 LOCK TABLES `medico` WRITE;
 /*!40000 ALTER TABLE `medico` DISABLE KEYS */;
-INSERT INTO `medico` VALUES (1,'Cabrito','Teves','08690186','148','15','15','15','15','15','15','15','15','CRM');
+INSERT INTO `medico` VALUES (1,'Cabrito','Teves','08.69018-63','(14) 8','(15','15','15@123.com','12345','12345','15','111.111.111-11','11.111.111-11','CRM');
 /*!40000 ALTER TABLE `medico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,7 +131,6 @@ CREATE TABLE `medicoespecialidade` (
 
 LOCK TABLES `medicoespecialidade` WRITE;
 /*!40000 ALTER TABLE `medicoespecialidade` DISABLE KEYS */;
-INSERT INTO `medicoespecialidade` VALUES (1,1),(1,2);
 /*!40000 ALTER TABLE `medicoespecialidade` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -158,7 +157,7 @@ CREATE TABLE `usuarios` (
   `rg` varchar(15) DEFAULT NULL,
   `tipo` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,7 +166,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'Lucas','Melo','444444','(44) 4444-4444','(44) 44444-4444','4444','444@44.com','1234','12345','44444444444','444.444.444-44','44.444.444-45',0),(2,'Carlos','Silva','888888888888888','','','44','email@email.com','4321','4321','8888888888','456.445.644-44','46.544.548-44',0);
+INSERT INTO `usuarios` VALUES (1,'Lucas','Melo','444444','(44) 4444-4444','(44) 44444-4444','4444','444@44.com','1234','12345','44444444444','444.444.444-44','44.444.444-45',0),(2,'Carlos','Silva','888888888888888','','','44','email@email.com','4321','4321','8888888888','456.445.644-44','46.544.548-44',0),(3,'Gean','silva','16.51561-61','(12) 1651-2156','(15) 61651-5612','12','bluc@mail.com','12345','12345','6151561651','489.156.161-65','15.616.516-51',0);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -209,6 +208,80 @@ VALUES
 `_usuario`,
 `_atendente`);
 
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `pr_in_medico` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `pr_in_medico`(
+IN `_nome` VARCHAR(50), 
+IN `_sobrenome` VARCHAR(50), 
+IN `_cep` VARCHAR(15),
+IN `_telefone` VARCHAR(15),
+IN `_celular` VARCHAR(16), 
+IN `_numero` VARCHAR(4),
+IN `_email` VARCHAR(50), 
+IN `_login` VARCHAR(8),
+ IN `_senha` VARCHAR(8),
+ IN `_endereco` VARCHAR(70), 
+ IN `_cpf` VARCHAR(15), 
+ IN `_rg` VARCHAR(15),  
+ IN `_documento` varchar(4))
+begin
+DECLARE EXIT HANDLER for SQLEXCEPTION
+begin
+	 SELECT 'erro desconhecido';
+end;
+
+	IF(!EXISTS(SELECT (1) from `pr_in_medico` where cpf = _cpf OR rg = _rg)) THEN    
+		IF(!EXISTS(SELECT (1) from `pr_in_medico` where login = _login)) THEN 
+        INSERT INTO `pr_in_medico`(      
+            `nome`
+            ,`sobrenome`
+            ,`cep`
+            ,`telefone`
+            ,`celular`
+            ,`numero`
+            ,`email`
+            ,`login`
+            ,`senha`
+            ,`endereco`
+            ,`cpf`
+            ,`rg`
+        	,`documento`) 
+            VALUES (
+            `_nome`
+            ,`_sobrenome`
+            ,`_cep`
+            ,`_telefone`
+            ,`_celular`
+            ,`_numero`
+            ,`_email`
+            ,`_login`
+            ,`_senha`
+            ,`_endereco`
+            ,`_cpf`
+            ,`_rg`
+            ,`_documento`
+            );
+		SELECT last_insert_id();
+	else
+		SELECT 'login ja cadastrado';
+		end if;
+        ELSE 
+        	select 'cpf ou rg ja cadastrados';
+		end if;
 end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -287,6 +360,62 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `pr_up_medico` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `pr_up_medico`(
+IN `_id` INT, 
+IN `_nome` VARCHAR(50),
+ IN `_sobrenome` VARCHAR(50),
+ IN `_cep` VARCHAR(15),
+ IN `_telefone` VARCHAR(15), 
+ IN `_celular` VARCHAR(16),
+ IN `_numero` VARCHAR(4), 
+ IN `_email` VARCHAR(50), 
+ IN `_login` VARCHAR(8), 
+ IN `_senha` VARCHAR(8), 
+ IN `_endereco` VARCHAR(70), 
+ IN `_cpf` VARCHAR(15), 
+ IN `_rg` VARCHAR(15))
+BEGIN
+ 
+IF(!EXISTS(SELECT (1) FROM `medico` WHERE cpf = _cpf and id_medico != _id) OR
+     !EXISTS(SELECT(1) FROM `medico` WHERE rg = _rg and id_medico != _id)) THEN
+UPDATE
+    `medico`
+SET
+    `nome` = `_nome`,
+    `sobrenome` = `_sobrenome`,
+    `cep` = `_cep`,
+    `telefone` = `_telefone`,
+    `celular` = `_celular`,
+    `numero` = `_numero`,
+    `email` = `_email`,
+    `login` = `_login`,
+    `senha` = `_senha`,
+    `endereco` = `_endereco`,
+    `cpf` = `_cpf`,
+    `rg` = `_rg`    
+WHERE
+    `id_medico` = `_id`;
+SELECT
+    'Dados atualizado com sucesso'; ELSE
+SELECT
+    'cpf ou rg ja cadastrados';
+END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `pr_up_user` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -311,12 +440,9 @@ IN `_nome` VARCHAR(50),
  IN `_endereco` VARCHAR(70), 
  IN `_cpf` VARCHAR(15), 
  IN `_rg` VARCHAR(15))
-BEGIN
-  DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        SELECT 'erro desconhecido';
-    END;  
-IF(!EXISTS(SELECT (1) FROM `usuarios` WHERE cpf = _cpf and id_usuario != _id) OR
+begin
+
+	IF(!EXISTS(SELECT (1) FROM `usuarios` WHERE cpf = _cpf and id_usuario != _id) OR
      !EXISTS(SELECT(1) FROM `usuarios` WHERE rg = _rg and id_usuario != _id)) THEN
 UPDATE
     `usuarios`
@@ -356,4 +482,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-08-01 18:31:48
+-- Dump completed on 2018-08-03 18:36:23

@@ -71,10 +71,18 @@
                                         <asp:TextBox runat="server" ID="txtSenha" CssClass="form-control" placeholder="Senha" TextMode="Password" />
                                         <asp:RequiredFieldValidator ErrorMessage="Campo Obrigatorio" ControlToValidate="txtSenha" runat="server" ForeColor="Red" ValidationGroup="login" Display="Dynamic" BorderColor="Red" />
                                     </div>
+                                      <div class="form-group">
+                                          <asp:DropDownList runat="server" ID="ddlTipoLogin" CssClass="form-control">
+                                              <asp:ListItem Text="Logar-se como" Value=""/>
+                                              <asp:ListItem Text="Pessoa fisica" Value="1"/>
+                                              <asp:ListItem Text="Medico ou Dentista" Value="2" />
+                                          </asp:DropDownList>
+                                        <asp:RequiredFieldValidator ErrorMessage="Escolha o tipo do login" ControlToValidate="ddlTipoLogin" runat="server" ForeColor="Red" ValidationGroup="login" Display="Dynamic" BorderColor="Red" />
+                                    </div>
                                     <asp:Label Text="text" runat="server" Visible="false" ID="lblMsg" />
-                                    <asp:UpdateProgress runat="server" AssociatedUpdatePanelID="pnlLogin">
+                                    <asp:UpdateProgress runat="server" AssociatedUpdatePanelID="pnlLogin" style="right: 0px;position: absolute;margin-right: 30px;">
                                         <ProgressTemplate>
-                                            <img src="img/loading.gif" />
+                                            <img src="/img/loading.gif" />
                                         </ProgressTemplate>
                                     </asp:UpdateProgress>
                                     <div class="form-group">

@@ -2,9 +2,9 @@
 
 <asp:Content ContentPlaceHolderID="body" runat="server">
 
-    <div>
-        <asp:TextBox runat="server" ID="txtPesquisa" />
-        <asp:ImageButton ImageUrl="~/img/icons/lupa.png" AlternateText="pesquisar" runat="server" ID="btnPequisar" OnClick="btnPequisar_Click" />
+    <div class="form-inline">
+        <asp:TextBox runat="server" ID="txtPesquisa" CssClass="form-control" />
+        <asp:ImageButton ImageUrl="~/img/icons/lupa.png" AlternateText="pesquisar" runat="server" ID="btnPequisar" OnClick="btnPequisar_Click" CssClass="icon" />
     </div>
 
     <div class="table-responsive">

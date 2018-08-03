@@ -13,7 +13,8 @@ namespace wwwroot
         string szConnection = "Server=127.0.0.1;Database=boa_agenda;Uid=root;Pwd=root;";
         protected void Page_Load(object sender, EventArgs e)
         {
-            VerificaLogin();
+          if(!IsPostBack)
+                VerificaLogin();
         }
         protected void btnEntrar_Click(object sender, EventArgs e)
         {
@@ -22,6 +23,50 @@ namespace wwwroot
                 LoginADM();
                 return;
             }
+            else if (ddlTipoLogin.SelectedValue == "1")
+                Login_user();
+            else if (ddlTipoLogin.SelectedValue == "2")
+                Login_Medico();
+        }
+
+
+        private void Login_Medico()
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            MySqlConnection con = new MySqlConnection(szConnection);
+            cmd.CommandText = "select * from medico where senha = '" + txtSenha.Text + "' and login = '" + txtLogin.Text + "'";
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.Connection = con;
+            try
+            {
+                con.Open();
+                MySqlDataReader rd = cmd.ExecuteReader();
+                if (rd.HasRows)
+                {
+                    while (rd.Read())
+                    {
+                        Session["id"] = rd["id_medico"].ToString();
+                        Session["nome"] = rd["nome"].ToString();
+                        Session["tipo"] = 2;
+                        Session["email"] = rd["email"].ToString();
+                        Response.Redirect(Request.Url.AbsoluteUri);
+                    }
+                }
+                else
+                {
+                    lblMsg.Visible = true;
+                    lblMsg.Text = "Login ou Senha não encontrados";
+                }
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                lblMsg.Visible = true;
+                lblMsg.Text = "Erro desconhecido " + ex.Message;
+            }
+        }
+        private void Login_user()
+        {
 
             MySqlCommand cmd = new MySqlCommand();
             MySqlConnection con = new MySqlConnection(szConnection);
@@ -40,7 +85,7 @@ namespace wwwroot
                         Session["nome"] = rd["nome"].ToString();
                         Session["tipo"] = 1;
                         Session["email"] = rd["email"].ToString();
-                        Response.Redirect("/");
+                        Response.Redirect(Request.Url.AbsoluteUri);
                     }
                 }
                 else
@@ -56,6 +101,7 @@ namespace wwwroot
                 lblMsg.Visible = true;
                 lblMsg.Text = "Erro desconhecido " + ex.Message;
             }
+
         }
         public void LoginADM()
         {

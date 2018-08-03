@@ -31,11 +31,12 @@
     $.fn.moveToListAndDelete = function (sourceList, destinationList) {
         var opts = $(sourceList + ' option:selected');
         if (opts.length == 0) {
-            alert("Selecione um item primeiro");
+            alert("Selecione um item primeirodd");
         }
 
         $(opts).remove();
-        $(destinationList).append($(opts).clone());
+        $(destinationList).add($(opts).clone());
+        return false;
     };
 
     //Moves all items from sourceList to destinationList and deleting

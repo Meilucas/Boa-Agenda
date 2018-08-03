@@ -31,15 +31,14 @@ namespace wwwroot.medico
                     {
                         if (Session["tipo"] != null)
                         {
-                            if (Session["tipo"].ToString() != "root")
+                            if (Session["tipo"].ToString() != "0")
                                 Response.Write("<script>alert('você não tem permição para editar esse cadastro');window.location.href = '/'</script>");
                             Session["IdEdicao"] = Convert.ToInt32(Request.QueryString["id"]);
                             PreencheCampos((int)Session["IdEdicao"]);
                         }
                         else
-                        {
                             Response.Write("<script>alert('você não tem permição para editar esse cadastro');window.location.href = '/'</script>");
-                        }
+
 
                     }
                     catch (Exception ex)
@@ -48,10 +47,19 @@ namespace wwwroot.medico
                         return;
                     }
                 }
-                else if (Session["id"] != null && Session["tipo"].ToString() != "0")  //verifica se o usuario esta logado
+                else if (Session["id"] != null)  //verifica se o usuario esta logado
                 {
-                    Session["IdEdicao"] = Convert.ToInt32(Session["id"]);
-                    PreencheCampos((int)Session["IdEdicao"]);
+
+                    if (Session["tipo"].ToString() == "2") // verifica se ele é um medico se não for ele redireciona para home
+                    {
+                        Session["IdEdicao"] = Convert.ToInt32(Session["id"]);
+                        PreencheCampos((int)Session["IdEdicao"]);
+                    }
+                    else if (Session["tipo"].ToString() == "0") // se for administrador ele não faz nada
+                        return;
+                    else
+                        Response.Write("<script>alert('você não tem permição para editar esse cadastro');window.location.href = '/'</script>");
+
                 }
             }
         }
@@ -98,9 +106,37 @@ namespace wwwroot.medico
             lstEspecialidade.DataBind();
 
         }
+        private bool ValidaDados()
+        {
+            if (txtCPF.Text.Length < 13)
+            {
+                Response.Write("<script>alert(' CPF invalido');</script>");
+                return false;
+            }
+            else if (txtRG.Text.Length < 12)
+            {
+                Response.Write("<script>alert(' RG invalido');</script>");
+                return false;
+            }
+            else if (txtCep.Text.Length < 10)
+            {
+                Response.Write("<script>alert(' CEP invalido');</script>");
+                return false;
+            }
+            else if (lstLista.Items.Count == 0)
+            {
+                Response.Write("<script>alert('Escolha pelo menos 1 especialidade ');</script>");
+                return false;
+            }
+            return true;
+        }
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (!Page.IsValid)
+            if (!ValidaDados())
+            {
+                return;
+            }
+            else if (!Page.IsValid)
             {
                 Response.Write("<script>alert('preencha todos os campos corretamente');</script>");
                 return;
@@ -129,7 +165,7 @@ namespace wwwroot.medico
             MySqlConnection con = new MySqlConnection(szConnection);
             cmd.Connection = con;
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "mudar depis";
+            cmd.CommandText = "pr_up_medico";
             cmd.Parameters.AddWithValue("_id", id);
             cmd.Parameters.AddWithValue("_nome", txtNome.Text);
             cmd.Parameters.AddWithValue("_sobrenome", txtSobreNome.Text);
@@ -147,34 +183,22 @@ namespace wwwroot.medico
             try
             {
                 con.Open();
-                insert = cmd.ExecuteScalar().ToString().Contains("sucesso");
+                 insert = cmd.ExecuteScalar().ToString().Contains("sucesso");
                 cmd.Parameters.Clear();
             }
             catch (Exception ex)
             {
                 Response.Write("<script>alert('erro " + ex.Message + "');</script>");
+                con.Close();
+                return;
             }
-            
 
-            try
-            {
-                string commandos = "";
-                foreach (ListItem item in lstLista.Items)
-                {
-                    commandos += "insert into medicoespecialidade("+id+","+item.Value +");";
-                }
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            string szEsp= Salva_especialidade(id);
 
             if (insert)
             {
                 Session.Remove("IdEdicao");
-                Response.Write("<script>alert('" + insert + "');window.location.href = '/'</script>");
+                Response.Write("<script>alert(' dados inserido com sucesso " +szEsp + "');window.location.href = '/'</script>");
             }
             else
                 Response.Write("<script>alert('" + insert + "');</script>");
@@ -187,7 +211,7 @@ namespace wwwroot.medico
 
             cmd.Connection = con;
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "pr_in_user";
+            cmd.CommandText = "pr_in_medico";
             cmd.Parameters.AddWithValue("_nome", txtNome.Text);
             cmd.Parameters.AddWithValue("_sobrenome", txtSobreNome.Text);
             cmd.Parameters.AddWithValue("_cep", txtCep.Text);
@@ -200,7 +224,11 @@ namespace wwwroot.medico
             cmd.Parameters.AddWithValue("_endereco", txtEndereco.Text);
             cmd.Parameters.AddWithValue("_cpf", txtCPF.Text);
             cmd.Parameters.AddWithValue("_rg", txtRG.Text);
-            cmd.Parameters.AddWithValue("_documento", ddlTipo.SelectedValue);
+            if (ddlDocumento.SelectedValue == "CRM")
+                cmd.Parameters.AddWithValue("_documento", "CRM");
+            else
+                cmd.Parameters.AddWithValue("_documento", "CRO");
+
             try
             {
                 con.Open();
@@ -225,13 +253,11 @@ namespace wwwroot.medico
             MySqlConnection con = new MySqlConnection(szConnection);
             cmd.Connection = con;
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "select * from usuarios where id_usuario = " + id;
+            cmd.CommandText = "select * from medico where id_medico = " + id;
             try
             {
                 con.Open();
                 MySqlDataReader rd = cmd.ExecuteReader();
-
-
                 while (rd.Read())
                 {
                     txtNome.Text = rd["nome"].ToString();
@@ -249,7 +275,8 @@ namespace wwwroot.medico
                     txtEndereco.Text = rd["endereco"].ToString();
                     txtCPF.Text = rd["cpf"].ToString();
                     txtRG.Text = rd["rg"].ToString();
-
+                    ddlDocumento.SelectedValue = rd["documento"].ToString();
+                    CarregaEspecialidades(id);
                 }
                 con.Close();
             }
@@ -259,18 +286,57 @@ namespace wwwroot.medico
             }
         }
 
-
-        protected void ddlTipo_SelectedIndexChanged(object sender, EventArgs e)
+        public string Salva_especialidade(int id)
         {
-            if (ddlTipo.SelectedValue == "1")
-                ddlDocumento.Visible = true;
-        }
+            string msg = "";
+            // primeiro deleta as ja existentes         
+            MySqlConnection con = new MySqlConnection(szConnection);
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.CommandText = "delete from medicoespecialidade where medico_id = " + id;
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = con;
+            try
+            {
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                msg = "\nerro ao inserir as expecialidades erro: " + ex.Message;
+            }
 
+            try
+            {
+                string commandos = "";
+                foreach (ListItem item in lstLista.Items)
+                {
+                    commandos += "insert into medicoespecialidade(" + id + "," + item.Value + ");";
+                }
+                cmd.CommandText = commandos;
+                int ret = cmd.ExecuteNonQuery();
+                if (ret == lstLista.Items.Count)
+                    msg = "";
+                else if (ret == 0)
+                    msg = "\nNão foi possivel salvar as especialidades";
+                else if (ret < lstLista.Items.Count)
+                    msg = "\nErro, foram salvas so algumas especialidade";
+
+                con.Close();
+
+
+            }
+            catch (Exception ex)
+            {
+                msg = "erro ao inserir as expecialidades erro: " + ex.Message;
+            }
+
+            return msg;
+        }
         protected void ddlDocumento_SelectedIndexChanged(object sender, EventArgs e)
         {
             string szTipo = "";
             if (ddlDocumento.SelectedValue == "CRM")
-                szTipo = "";
+                szTipo = "CRM";
             else
                 szTipo = "CRO";
 
@@ -292,10 +358,14 @@ namespace wwwroot.medico
             {
                 throw ex;
             }
-            lstLista.DataSource = dt;
-            lstLista.DataValueField = "id_especialidade";
-            lstLista.DataTextField = "especialidade";
-            lstLista.DataBind();
+
+            lstEspecialidade.DataSource = dt;
+            lstEspecialidade.DataValueField = "id_especialidade";
+            lstEspecialidade.DataTextField = "especialidade";
+            lstEspecialidade.DataBind();
+            pnlEspecialidade.Visible = true;
+            lstEspecialidade.Dispose();
+            lstLista.Dispose();
         }
     }
 }

@@ -14,15 +14,15 @@ namespace wwwroot.usuario
         string szConnection = "Server=127.0.0.1;Database=boa_agenda;Uid=root;Pwd=root;";
         protected void Page_Load(object sender, EventArgs e)
         {
-            /*if (Session["tipo"] != null)
+            if (Session["tipo"] != null)
             {
-                if (Session["tipo"].ToString() != "root")
+                if (Session["tipo"].ToString() != "0")
                     Response.Write("<script>alert('A pagina so pode ser visualizada pelo administrador');window.location.href = '/'</script>");
             }
             else
                 Response.Write("<script>alert('A pagina so pode ser visualizada pelo administrador');window.location.href = '/'</script>");
-            
-  */
+           
+ 
             PreencheGrid("");
         }
         public void PreencheGrid(string szNome)
