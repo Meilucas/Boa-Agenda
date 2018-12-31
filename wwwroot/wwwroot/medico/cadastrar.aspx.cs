@@ -6,12 +6,12 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using Classes.Code;
 namespace wwwroot.medico
 {
     public partial class cadastrar : System.Web.UI.Page
     {
-        string szConnection = "Server=127.0.0.1;Database=boa_agenda;Uid=root;Pwd=root;";
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["tipo"] != null)
@@ -65,24 +65,13 @@ namespace wwwroot.medico
         }
         void CarregaEspecialidades(int id = 0)
         {
-            DataTable dt = new DataTable();
-            MySqlCommand cmd = new MySqlCommand();
-            MySqlDataAdapter ad;
-            MySqlConnection con = new MySqlConnection(szConnection);
-            cmd.Connection = con;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT ep.id_especialidade, ep.especialidade  FROM medicoespecialidade mep inner join especialidade ep on mep.especialidade_id = ep.id_especialidade where medico_id =" + id;
-            try
-            {
-                con.Open();
-                cmd.ExecuteNonQuery();
-                ad = new MySqlDataAdapter(cmd);
-                ad.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+
+            string command = "SELECT ep.id_especialidade, ep.especialidade  FROM medicoespecialidade mep inner join especialidade ep on mep.especialidade_id = ep.id_especialidade where medico_id =" + id;
+            var dt = new DataTable();
+            Dao dao = new Dao();
+
+            dt = dao.ExecuteReader(command, CommandType.Text);
+
             lstLista.DataSource = dt;
             lstLista.DataValueField = "id_especialidade";
             lstLista.DataTextField = "especialidade";
@@ -94,12 +83,9 @@ namespace wwwroot.medico
                 id_especialidade += item[0] + ",";
             id_especialidade = id_especialidade.Remove(id_especialidade.LastIndexOf(','));
 
-            cmd.CommandText = "SELECT ep.id_especialidade, ep.especialidade FROM especialidade ep inner join medico md on ep.documento = md.documento  where id_especialidade not in(" + id_especialidade + ")";
-            dt = new DataTable();
-            cmd.ExecuteNonQuery();
-            ad = new MySqlDataAdapter(cmd);
-            ad.Fill(dt);
+            command = "SELECT ep.id_especialidade, ep.especialidade FROM especialidade ep inner join medico md on ep.documento = md.documento  where id_especialidade not in(" + id_especialidade + ")";
 
+            dt = dao.ExecuteReader(command, CommandType.Text);
             lstEspecialidade.DataSource = dt;
             lstEspecialidade.DataValueField = "id_especialidade";
             lstEspecialidade.DataTextField = "especialidade";
@@ -161,79 +147,69 @@ namespace wwwroot.medico
         }
         private void Editar(int id)
         {
-            MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection con = new MySqlConnection(szConnection);
-            cmd.Connection = con;
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "pr_up_medico";
-            cmd.Parameters.AddWithValue("_id", id);
-            cmd.Parameters.AddWithValue("_nome", txtNome.Text);
-            cmd.Parameters.AddWithValue("_sobrenome", txtSobreNome.Text);
-            cmd.Parameters.AddWithValue("_cep", txtCep.Text);
-            cmd.Parameters.AddWithValue("_telefone", txtTelefone.Text);
-            cmd.Parameters.AddWithValue("_celular", txtCel.Text);
-            cmd.Parameters.AddWithValue("_numero", txtnumero.Text);
-            cmd.Parameters.AddWithValue("_email", txtEmail.Text);
-            cmd.Parameters.AddWithValue("_login", txtLogin.Text);
-            cmd.Parameters.AddWithValue("_senha", txtSenha.Text);
-            cmd.Parameters.AddWithValue("_endereco", txtEndereco.Text);
-            cmd.Parameters.AddWithValue("_cpf", txtCPF.Text);
-            cmd.Parameters.AddWithValue("_rg", txtRG.Text);
+            Dao dao = new Dao();
+            dao.AddParameter("_id", id);
+            dao.AddParameter("_nome", txtNome.Text);
+            dao.AddParameter("_sobrenome", txtSobreNome.Text);
+            dao.AddParameter("_cep", txtCep.Text);
+            dao.AddParameter("_telefone", txtTelefone.Text);
+            dao.AddParameter("_celular", txtCel.Text);
+            dao.AddParameter("_numero", txtnumero.Text);
+            dao.AddParameter("_email", txtEmail.Text);
+            dao.AddParameter("_login", txtLogin.Text);
+            dao.AddParameter("_senha", txtSenha.Text);
+            dao.AddParameter("_endereco", txtEndereco.Text);
+            dao.AddParameter("_cpf", txtCPF.Text);
+            dao.AddParameter("_rg", txtRG.Text);
+            var retorno = dao.ExecuteCommand("pr_up_medico", CommandType.StoredProcedure);
             bool insert = false;
             try
             {
-                con.Open();
-                 insert = cmd.ExecuteScalar().ToString().Contains("sucesso");
-                cmd.Parameters.Clear();
+                insert = retorno.ToString().Contains("sucesso");
             }
             catch (Exception ex)
             {
                 Response.Write("<script>alert('erro " + ex.Message + "');</script>");
-                con.Close();
+
                 return;
             }
 
-            string szEsp= Salva_especialidade(id);
+            string szEsp = Salva_especialidade(id);
 
             if (insert)
             {
                 Session.Remove("IdEdicao");
-                Response.Write("<script>alert(' dados inserido com sucesso " +szEsp + "');window.location.href = '/'</script>");
+                Response.Write("<script>alert(' dados inserido com sucesso " + szEsp + "');window.location.href = '/'</script>");
             }
             else
                 Response.Write("<script>alert('" + insert + "');</script>");
-            con.Close();
         }
         private void SalvaMedico()
         {
-            MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection con = new MySqlConnection(szConnection);
+            Dao dao = new Dao();
 
-            cmd.Connection = con;
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "pr_in_medico";
-            cmd.Parameters.AddWithValue("_nome", txtNome.Text);
-            cmd.Parameters.AddWithValue("_sobrenome", txtSobreNome.Text);
-            cmd.Parameters.AddWithValue("_cep", txtCep.Text);
-            cmd.Parameters.AddWithValue("_telefone", txtTelefone.Text);
-            cmd.Parameters.AddWithValue("_celular", txtCel.Text);
-            cmd.Parameters.AddWithValue("_numero", txtnumero.Text);
-            cmd.Parameters.AddWithValue("_email", txtEmail.Text);
-            cmd.Parameters.AddWithValue("_login", txtLogin.Text);
-            cmd.Parameters.AddWithValue("_senha", txtSenha.Text);
-            cmd.Parameters.AddWithValue("_endereco", txtEndereco.Text);
-            cmd.Parameters.AddWithValue("_cpf", txtCPF.Text);
-            cmd.Parameters.AddWithValue("_rg", txtRG.Text);
+
+            dao.AddParameter("_nome", txtNome.Text);
+            dao.AddParameter("_sobrenome", txtSobreNome.Text);
+            dao.AddParameter("_cep", txtCep.Text);
+            dao.AddParameter("_telefone", txtTelefone.Text);
+            dao.AddParameter("_celular", txtCel.Text);
+            dao.AddParameter("_numero", txtnumero.Text);
+            dao.AddParameter("_email", txtEmail.Text);
+            dao.AddParameter("_login", txtLogin.Text);
+            dao.AddParameter("_senha", txtSenha.Text);
+            dao.AddParameter("_endereco", txtEndereco.Text);
+            dao.AddParameter("_cpf", txtCPF.Text);
+            dao.AddParameter("_rg", txtRG.Text);
             if (ddlDocumento.SelectedValue == "CRM")
-                cmd.Parameters.AddWithValue("_documento", "CRM");
+                dao.AddParameter("_documento", "CRM");
             else
-                cmd.Parameters.AddWithValue("_documento", "CRO");
+                dao.AddParameter("_documento", "CRO");
 
             try
             {
-                con.Open();
-                string msg = cmd.ExecuteScalar().ToString();
-                con.Close();
+
+                string msg = dao.ExecuteCommand("pr_in_medico", CommandType.StoredProcedure).ToString();
                 if (msg.Contains("sucesso"))
                 {
                     Response.Write("<script>alert('" + msg + "');window.location.href = '/'</script>");
@@ -249,36 +225,30 @@ namespace wwwroot.medico
         }
         public void PreencheCampos(int id)
         {
-            MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection con = new MySqlConnection(szConnection);
-            cmd.Connection = con;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "select * from medico where id_medico = " + id;
+            Dao dao = new Dao();
+            var rd = dao.ExecuteReader("select * from medico where id_medico = " + id, CommandType.Text);
+
             try
             {
-                con.Open();
-                MySqlDataReader rd = cmd.ExecuteReader();
-                while (rd.Read())
-                {
-                    txtNome.Text = rd["nome"].ToString();
-                    txtSobreNome.Text = rd["sobrenome"].ToString();
-                    txtCep.Text = rd["cep"].ToString();
-                    txtTelefone.Text = rd["telefone"].ToString();
-                    txtCel.Text = rd["celular"].ToString();
-                    txtnumero.Text = rd["numero"].ToString();
-                    txtEmail.Text = rd["email"].ToString();
-                    txtLogin.Text = rd["login"].ToString();
-                    txtSenha.TextMode = TextBoxMode.SingleLine;
-                    txtSenha.Text = rd["senha"].ToString();
-                    txtSenha2.TextMode = TextBoxMode.SingleLine;
-                    txtSenha2.Text = rd["senha"].ToString();
-                    txtEndereco.Text = rd["endereco"].ToString();
-                    txtCPF.Text = rd["cpf"].ToString();
-                    txtRG.Text = rd["rg"].ToString();
-                    ddlDocumento.SelectedValue = rd["documento"].ToString();
-                    CarregaEspecialidades(id);
-                }
-                con.Close();
+
+                txtNome.Text = rd.Rows[0]["nome"].ToString();
+                txtSobreNome.Text = rd.Rows[0]["sobrenome"].ToString();
+                txtCep.Text = rd.Rows[0]["cep"].ToString();
+                txtTelefone.Text = rd.Rows[0]["telefone"].ToString();
+                txtCel.Text = rd.Rows[0]["celular"].ToString();
+                txtnumero.Text = rd.Rows[0]["numero"].ToString();
+                txtEmail.Text = rd.Rows[0]["email"].ToString();
+                txtLogin.Text = rd.Rows[0]["login"].ToString();
+                txtSenha.TextMode = TextBoxMode.SingleLine;
+                txtSenha.Text = rd.Rows[0]["senha"].ToString();
+                txtSenha2.TextMode = TextBoxMode.SingleLine;
+                txtSenha2.Text = rd.Rows[0]["senha"].ToString();
+                txtEndereco.Text = rd.Rows[0]["endereco"].ToString();
+                txtCPF.Text = rd.Rows[0]["cpf"].ToString();
+                txtRG.Text = rd.Rows[0]["rg"].ToString();
+                ddlDocumento.SelectedValue = rd.Rows[0]["documento"].ToString();
+                CarregaEspecialidades(id);
+
             }
             catch (Exception ex)
             {
@@ -290,15 +260,11 @@ namespace wwwroot.medico
         {
             string msg = "";
             // primeiro deleta as ja existentes         
-            MySqlConnection con = new MySqlConnection(szConnection);
-            MySqlCommand cmd = new MySqlCommand();
-            cmd.CommandText = "delete from medicoespecialidade where medico_id = " + id;
-            cmd.CommandType = CommandType.Text;
-            cmd.Connection = con;
+            Dao dao = new Dao();
+
             try
             {
-                con.Open();
-                cmd.ExecuteNonQuery();
+                dao.ExecuteCommand("delete from medicoespecialidade where medico_id = " + id, CommandType.Text);
             }
             catch (Exception ex)
             {
@@ -312,18 +278,7 @@ namespace wwwroot.medico
                 {
                     commandos += "insert into medicoespecialidade(" + id + "," + item.Value + ");";
                 }
-                cmd.CommandText = commandos;
-                int ret = cmd.ExecuteNonQuery();
-                if (ret == lstLista.Items.Count)
-                    msg = "";
-                else if (ret == 0)
-                    msg = "\nNão foi possivel salvar as especialidades";
-                else if (ret < lstLista.Items.Count)
-                    msg = "\nErro, foram salvas so algumas especialidade";
-
-                con.Close();
-
-
+                dao.ExecuteCommand(commandos, CommandType.Text);
             }
             catch (Exception ex)
             {
@@ -340,32 +295,24 @@ namespace wwwroot.medico
             else
                 szTipo = "CRO";
 
-            DataTable dt = new DataTable();
-            MySqlCommand cmd = new MySqlCommand();
-            MySqlDataAdapter ad;
-            MySqlConnection con = new MySqlConnection(szConnection);
-            cmd.Connection = con;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT * FROM especialidade where documento = '" + szTipo + "';";
+            Dao dao = new Dao();
+
             try
             {
-                con.Open();
-                cmd.ExecuteNonQuery();
-                ad = new MySqlDataAdapter(cmd);
-                ad.Fill(dt);
+                DataTable dt = dao.ExecuteReader("SELECT * FROM especialidade where documento = '" + szTipo + "';", CommandType.Text);
+                lstEspecialidade.DataSource = dt;
+                lstEspecialidade.DataValueField = "id_especialidade";
+                lstEspecialidade.DataTextField = "especialidade";
+                lstEspecialidade.DataBind();
+                pnlEspecialidade.Visible = true;
+                lstEspecialidade.Dispose();
+                lstLista.Dispose();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
 
-            lstEspecialidade.DataSource = dt;
-            lstEspecialidade.DataValueField = "id_especialidade";
-            lstEspecialidade.DataTextField = "especialidade";
-            lstEspecialidade.DataBind();
-            pnlEspecialidade.Visible = true;
-            lstEspecialidade.Dispose();
-            lstLista.Dispose();
         }
     }
 }

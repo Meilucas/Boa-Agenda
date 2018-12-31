@@ -1,0 +1,9 @@
+﻿################################################################################
+# Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
+################################################################################
+
+/wwwroot/.vs
+/wwwroot/Classes/obj/Debug
+/wwwroot/packages
+/wwwroot/wwwroot/bin
+/wwwroot/wwwroot/obj/Debug
