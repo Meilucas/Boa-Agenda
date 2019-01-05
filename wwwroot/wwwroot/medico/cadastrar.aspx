@@ -94,10 +94,11 @@
     </fieldset>
     <fieldset runat="server" id="pnlEspecialidade" visible="false">
         <legend>Especialidade</legend>
-        <asp:ListBox runat="server" ID="lstEspecialidade" SelectionMode="Multiple" Rows="7" CssClass="sortable" ValidateRequestMode="Disabled" DataTextField="especialidade" DataValueField="id_especialidade" AppendDataBoundItems="true"></asp:ListBox>
-        <a href="#" id="btnRemove">Remover</a>
+        <asp:ListBox runat="server" ID="lstEspecialidade" SelectionMode="Multiple" Rows="7" CssClass="sortable" ValidateRequestMode="Disabled" DataTextField="especialidade" DataValueField="id_especialidade" AppendDataBoundItems="true" ClientIDMode="Static"></asp:ListBox>
         <a href="#" id="btnAdicionar">Adicionar</a>
-        <asp:ListBox runat="server" ID="lstLista" SelectionMode="Multiple" Rows="7" CssClass="sortable" ValidateRequestMode="Disabled" DataTextField="especialidade" DataValueField="id_especialidade" AppendDataBoundItems="true"> </asp:ListBox>
+        <a href="#" id="btnRemove">Remover</a>
+   
+        <asp:ListBox runat="server" ID="lstLista" SelectionMode="Multiple" Rows="7" CssClass="sortable" ValidateRequestMode="Disabled" DataTextField="especialidade" DataValueField="id_especialidade" AppendDataBoundItems="true"  ClientIDMode="Static"> </asp:ListBox>
     </fieldset>
     <fieldset>
         <legend>Acesso</legend>
@@ -136,11 +137,11 @@
 
             });
             $("#btnRemove").on("click", function (e) {
-                $('select').moveToListAndDelete('#body_lstLista', '#body_lstEspecialidade');
+                $('select').moveToListAndDelete('#lstLista', '#lstEspecialidade');
                 e.preventDefault();
             })
             $("#btnAdicionar").on("click", function (e) {
-                $('select').moveToListAndDelete('#body_lstEspecialidade', '#body_lstLista');
+                $('select').moveToListAndDelete('#lstEspecialidade', '#lstLista');
                 e.preventDefault();
             });
 

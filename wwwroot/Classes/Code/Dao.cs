@@ -17,7 +17,7 @@ namespace Classes.Code
         {
             MySqlConnection connection = new MySqlConnection(szConnection);
             MySqlCommand com = new MySqlCommand();
-            DataTable table = null;
+            DataTable table = new DataTable();
             foreach (MySqlParameter item in parametros)
             {
                 com.Parameters.AddWithValue(item.ParameterName, item.Value);

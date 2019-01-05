@@ -31,11 +31,12 @@
     $.fn.moveToListAndDelete = function (sourceList, destinationList) {
         var opts = $(sourceList + ' option:selected');
         if (opts.length == 0) {
-            alert("Selecione um item primeirodd");
+            alert("Selecione um item primeiro");
         }
 
+        $(destinationList).append($(opts).clone());
         $(opts).remove();
-        $(destinationList).add($(opts).clone());
+    
         return false;
     };
 
