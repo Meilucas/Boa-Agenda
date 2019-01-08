@@ -97,8 +97,8 @@
         <asp:ListBox runat="server" ID="lstEspecialidade" SelectionMode="Multiple" Rows="7" CssClass="sortable" ValidateRequestMode="Disabled" DataTextField="especialidade" DataValueField="id_especialidade" AppendDataBoundItems="true" ClientIDMode="Static"></asp:ListBox>
         <a href="#" id="btnAdicionar">Adicionar</a>
         <a href="#" id="btnRemove">Remover</a>
-   
-        <asp:ListBox runat="server" ID="lstLista" SelectionMode="Multiple" Rows="7" CssClass="sortable" ValidateRequestMode="Disabled" DataTextField="especialidade" DataValueField="id_especialidade" AppendDataBoundItems="true"  ClientIDMode="Static"> </asp:ListBox>
+        <select Multiple="true" size="7" class="sortable" ID="lstLista" runat="server" ClientIDMode="Static"></select>
+        <asp:ListBox runat="server" SelectionMode="Multiple" Rows="7" CssClass="sortable" ValidateRequestMode="Disabled" DataTextField="especialidade" DataValueField="id_especialidade" AppendDataBoundItems="true"  ClientIDMode="Static"> </asp:ListBox>
     </fieldset>
     <fieldset>
         <legend>Acesso</legend>

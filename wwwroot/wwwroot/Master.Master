@@ -50,7 +50,7 @@
 
             </header>
 
-
+            <!--  Login  -->
             <div class="modal fade" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -72,12 +72,13 @@
                                         <asp:RequiredFieldValidator ErrorMessage="Campo Obrigatorio" ControlToValidate="txtSenha" runat="server" ForeColor="Red" ValidationGroup="login" Display="Dynamic" BorderColor="Red" />
                                     </div>
                                       <div class="form-group">
-                                          <asp:DropDownList runat="server" ID="ddlTipoLogin" CssClass="form-control">
+                                          <asp:DropDownList runat="server" ID="ddlTipoLogin" CssClass="form-control" ClientIDMode="Static">
                                               <asp:ListItem Text="Logar-se como" Value=""/>
                                               <asp:ListItem Text="Pessoa fisica" Value="1"/>
                                               <asp:ListItem Text="Medico ou Dentista" Value="2" />
                                           </asp:DropDownList>
                                         <asp:RequiredFieldValidator ErrorMessage="Escolha o tipo do login" ControlToValidate="ddlTipoLogin" runat="server" ForeColor="Red" ValidationGroup="login" Display="Dynamic" BorderColor="Red" />
+                                         <a href="/usuario/cadastrar.aspx" style="display:none" id="lnkCadastrar" class="alert-link float-right"/>Cadastrar-se</a>
                                     </div>
                                     <asp:Label Text="text" runat="server" Visible="false" ID="lblMsg" />
                                     <asp:UpdateProgress runat="server" AssociatedUpdatePanelID="pnlLogin" style="right: 0px;position: absolute;margin-right: 30px;">
@@ -112,6 +113,13 @@
             </div>
         </div>
     </form>
-
+    <script>
+        $('#ddlTipoLogin').on('change', function () {
+            if ($('#ddlTipoLogin').find('option:checked').val() == 1)
+                $('#lnkCadastrar').show();
+            else
+                $('#lnkCadastrar').hide();
+        })
+    </script>
 </body>
 </html>

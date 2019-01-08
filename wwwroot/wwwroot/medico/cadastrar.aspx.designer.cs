@@ -145,7 +145,7 @@ namespace wwwroot.medico {
         /// Campo gerado automaticamente.
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ListBox lstLista;
+        protected global::System.Web.UI.HtmlControls.HtmlSelect lstLista;
         
         /// <summary>
         /// Controle txtLogin.
