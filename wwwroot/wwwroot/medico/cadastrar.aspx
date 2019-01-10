@@ -87,7 +87,7 @@
                 <label class="col-sm-1" for="txtEmail">Email*</label>
                 <div class="col-md-4">
                     <asp:TextBox runat="server" CssClass="form-control" ID="txtEmail" TextMode="Email" />
-                    <asp:RequiredFieldValidator ControlToValidate="txtEmail" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" BorderColor="Red" />
+                    <asp:RequiredFieldValidator ControlToValidate="txtEmail" ErrorMessage="Email" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" BorderColor="Red" />
                 </div>
             </div>
         </div>
@@ -96,7 +96,8 @@
         <legend>Especialidade</legend>
         <asp:ListBox runat="server" ID="lstEspecialidade" SelectionMode="Multiple" Rows="7" CssClass="sortable" ValidateRequestMode="Disabled" DataTextField="especialidade" DataValueField="id_especialidade" AppendDataBoundItems="true" ClientIDMode="Static"></asp:ListBox>
         <a href="#" id="btnAdicionar">Adicionar</a>
-        <a href="#" id="btnRemove">Remover</a>
+        <a href="#" id="btnRemove">Remover</a>        
+        <asp:HiddenField  runat="server" ID="hdnEspecialidades" value="" ClientIDMode="Static"/>
         <select Multiple="true" size="7" class="sortable" ID="lstLista" runat="server" ClientIDMode="Static"></select>
         <asp:ListBox runat="server" SelectionMode="Multiple" Rows="7" CssClass="sortable" ValidateRequestMode="Disabled" DataTextField="especialidade" DataValueField="id_especialidade" AppendDataBoundItems="true"  ClientIDMode="Static"> </asp:ListBox>
     </fieldset>
@@ -138,10 +139,12 @@
             });
             $("#btnRemove").on("click", function (e) {
                 $('select').moveToListAndDelete('#lstLista', '#lstEspecialidade');
+                setValueEspec();
                 e.preventDefault();
             })
             $("#btnAdicionar").on("click", function (e) {
                 $('select').moveToListAndDelete('#lstEspecialidade', '#lstLista');
+                setValueEspec();
                 e.preventDefault();
             });
 
@@ -152,6 +155,13 @@
             $('.cel').mask('(00) 00000-0000');
             $('.cep').mask('00.00000-00');
         });
+        function setValueEspec() {
+            var options =$.makeArray( $('#lstLista').find('option').map(function (index, arr, ext) {
+                return $(arr).val()
+            }));
+
+            $('#hdnEspecialidades').val(options);
+        }
     </script>
 
 </asp:Content>
