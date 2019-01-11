@@ -1,6 +1,8 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Classes.Code;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -10,10 +12,9 @@ namespace wwwroot
 {
     public partial class Master : System.Web.UI.MasterPage
     {
-        string szConnection = "Server=127.0.0.1;Database=boa_agenda;Uid=root;Pwd=root;";
         protected void Page_Load(object sender, EventArgs e)
         {
-          if(!IsPostBack)
+            if (!IsPostBack)
                 VerificaLogin();
         }
         protected void btnEntrar_Click(object sender, EventArgs e)
@@ -32,60 +33,47 @@ namespace wwwroot
 
         private void Login_Medico()
         {
-            MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection con = new MySqlConnection(szConnection);
-            cmd.CommandText = "select * from medico where senha = '" + txtSenha.Text + "' and login = '" + txtLogin.Text + "'";
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.Connection = con;
-            try
+            Dao db = new Dao();
+            DataTable tb = db.ExecuteReader("select * from medico where senha = '" + txtSenha.Text + "' and login = '" + txtLogin.Text + "'", CommandType.Text);
+            if (tb != null)
             {
-                con.Open();
-                MySqlDataReader rd = cmd.ExecuteReader();
-                if (rd.HasRows)
+                if (tb.Rows.Count > 0)
                 {
-                    while (rd.Read())
-                    {
-                        Session["id"] = rd["id_medico"].ToString();
-                        Session["nome"] = rd["nome"].ToString();
-                        Session["tipo"] = 2;
-                        Session["email"] = rd["email"].ToString();
-                        Response.Redirect(Request.Url.AbsoluteUri);
-                    }
+                    Session["id"] = tb.Rows[0]["id_medico"].ToString();
+                    Session["nome"] = tb.Rows[0]["nome"].ToString();
+                    Session["tipo"] = 2;
+                    Session["email"] = tb.Rows[0]["email"].ToString();
+                    SendScript("window.location.href = '" + Request.Url.AbsoluteUri + "'");
                 }
                 else
                 {
                     lblMsg.Visible = true;
                     lblMsg.Text = "Login ou Senha não encontrados";
                 }
-                con.Close();
             }
-            catch (Exception ex)
+            else
             {
                 lblMsg.Visible = true;
-                lblMsg.Text = "Erro desconhecido " + ex.Message;
+                lblMsg.Text = "Erro desconhecido";
             }
         }
         private void Login_user()
         {
 
-            MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection con = new MySqlConnection(szConnection);
-            cmd.CommandText = "select * from usuarios where senha = '" + txtSenha.Text + "' and login = '" + txtLogin.Text + "'";
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.Connection = con;
-            try
+
+            Dao db = new Dao();
+            DataTable tb = db.ExecuteReader("select * from medico where senha = '" + txtSenha.Text + "' and login = '" + txtLogin.Text + "'", CommandType.Text);
+            if (tb != null)
             {
-                con.Open();
-                MySqlDataReader rd = cmd.ExecuteReader();
-                if (rd.HasRows)
+                if (tb.Rows.Count > 0)
                 {
-                    while (rd.Read())
+                    if (tb.Rows.Count > 0)
                     {
-                        Session["id"] = rd["id_usuario"].ToString();
-                        Session["nome"] = rd["nome"].ToString();
+                        Session["id"] = tb.Rows[0]["id_usuario"].ToString();
+                        Session["nome"] = tb.Rows[0]["nome"].ToString();
                         Session["tipo"] = 1;
-                        Session["email"] = rd["email"].ToString();
-                        Response.Redirect(Request.Url.AbsoluteUri);
+                        Session["email"] = tb.Rows[0]["email"].ToString();
+                        SendScript("window.location.href = '" + Request.Url.AbsoluteUri + "'");
                     }
                 }
                 else
@@ -94,12 +82,11 @@ namespace wwwroot
                     lblMsg.Text = "Login ou Senha não encontrados";
                 }
 
-                con.Close();
             }
-            catch (Exception ex)
+            else
             {
                 lblMsg.Visible = true;
-                lblMsg.Text = "Erro desconhecido " + ex.Message;
+                lblMsg.Text = "Erro desconhecido ";
             }
 
         }
@@ -127,10 +114,14 @@ namespace wwwroot
             Session.RemoveAll();
             Response.Redirect("/");
         }
-        private void LiberaMenuADM() {
+        private void LiberaMenuADM()
+        {
 
         }
-
+        public void SendScript(string script)
+        {
+            ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "script", script, true);
+        }
 
     }
 }

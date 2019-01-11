@@ -95,7 +95,7 @@ CREATE TABLE `medico` (
   `rg` varchar(15) DEFAULT NULL,
   `documento` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`id_medico`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -104,7 +104,7 @@ CREATE TABLE `medico` (
 
 LOCK TABLES `medico` WRITE;
 /*!40000 ALTER TABLE `medico` DISABLE KEYS */;
-INSERT INTO `medico` VALUES (1,'Cabrito','Teves','08.69018-63','(14) 8','(15','15','15@123.com','12345','12345','15','111.111.111-11','11.111.111-11','CRM');
+INSERT INTO `medico` VALUES (5,'Kiko','Leandro Bruno ','08.69021-5','(11) 1111-1111','(11) 11111-1111','77','blublucas@gmail.com','123454','123454','','111.111.111-11','11.111.111-11','CRM');
 /*!40000 ALTER TABLE `medico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,8 +120,8 @@ CREATE TABLE `medicoespecialidade` (
   `especialidade_id` int(11) NOT NULL,
   PRIMARY KEY (`medico_id`,`especialidade_id`),
   KEY `FK_especialidade` (`especialidade_id`),
-  CONSTRAINT `FK_especialidade` FOREIGN KEY (`especialidade_id`) REFERENCES `especialidade` (`id_especialidade`),
-  CONSTRAINT `FK_medico` FOREIGN KEY (`medico_id`) REFERENCES `medico` (`id_medico`)
+  CONSTRAINT `FK_especialidade` FOREIGN KEY (`especialidade_id`) REFERENCES `especialidade` (`id_especialidade`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_medico` FOREIGN KEY (`medico_id`) REFERENCES `medico` (`id_medico`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -243,44 +243,47 @@ DECLARE EXIT HANDLER for SQLEXCEPTION
 begin
 	 SELECT 'erro desconhecido';
 end;
-
-	IF(!EXISTS(SELECT (1) from `pr_in_medico` where cpf = _cpf OR rg = _rg)) THEN    
-		IF(!EXISTS(SELECT (1) from `pr_in_medico` where login = _login)) THEN 
-        INSERT INTO `pr_in_medico`(      
-            `nome`
-            ,`sobrenome`
-            ,`cep`
-            ,`telefone`
-            ,`celular`
-            ,`numero`
-            ,`email`
-            ,`login`
-            ,`senha`
-            ,`endereco`
-            ,`cpf`
-            ,`rg`
-        	,`documento`) 
-            VALUES (
-            `_nome`
-            ,`_sobrenome`
-            ,`_cep`
-            ,`_telefone`
-            ,`_celular`
-            ,`_numero`
-            ,`_email`
-            ,`_login`
-            ,`_senha`
-            ,`_endereco`
-            ,`_cpf`
-            ,`_rg`
-            ,`_documento`
-            );
-		SELECT last_insert_id();
-	else
-		SELECT 'login ja cadastrado';
-		end if;
-        ELSE 
-        	select 'cpf ou rg ja cadastrados';
+	IF(!EXISTS(SELECT (1) from `medico` where email = _email)) THEN    
+			IF(!EXISTS(SELECT (1) from `medico` where cpf = _cpf OR rg = _rg)) THEN    
+				IF(!EXISTS(SELECT (1) from `medico` where login = _login)) THEN 
+				INSERT INTO `medico`(      
+					`nome`
+					,`sobrenome`
+					,`cep`
+					,`telefone`
+					,`celular`
+					,`numero`
+					,`email`
+					,`login`
+					,`senha`
+					,`endereco`
+					,`cpf`
+					,`rg`
+					,`documento`) 
+					VALUES (
+					`_nome`
+					,`_sobrenome`
+					,`_cep`
+					,`_telefone`
+					,`_celular`
+					,`_numero`
+					,`_email`
+					,`_login`
+					,`_senha`
+					,`_endereco`
+					,`_cpf`
+					,`_rg`
+					,`_documento`
+					);
+				SELECT last_insert_id();
+			else
+				SELECT 'login ja cadastrado';
+				end if;
+				ELSE 
+					select 'cpf ou rg ja cadastrados';
+				end if;
+		ELSE 
+					select 'cpf ou rg ja cadastrados';                    
 		end if;
 end ;;
 DELIMITER ;
@@ -482,4 +485,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-08-03 18:36:23
+-- Dump completed on 2019-01-11 18:17:24

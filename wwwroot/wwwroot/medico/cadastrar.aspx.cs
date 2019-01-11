@@ -14,13 +14,7 @@ namespace wwwroot.medico
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["tipo"] != null)
-            {
-                if (Session["tipo"].ToString() == "0")
-                {
-                    pnlEspecialidade.Visible = true;
-                }
-            }
+
             if (!IsPostBack)
             {
                 // Verificar se a pagina é de edição ou cadastro 
@@ -38,8 +32,6 @@ namespace wwwroot.medico
                         }
                         else
                             Response.Write("<script>alert('você não tem permição para editar esse cadastro');window.location.href = '/'</script>");
-
-
                     }
                     catch (Exception ex)
                     {
@@ -49,7 +41,6 @@ namespace wwwroot.medico
                 }
                 else if (Session["id"] != null)  //verifica se o usuario esta logado
                 {
-
                     if (Session["tipo"].ToString() == "2") // verifica se ele é um medico se não for ele redireciona para home
                     {
                         Session["IdEdicao"] = Convert.ToInt32(Session["id"]);
@@ -59,7 +50,13 @@ namespace wwwroot.medico
                         return;
                     else
                         Response.Write("<script>alert('você não tem permição para editar esse cadastro');window.location.href = '/'</script>");
-
+                }
+                if (Session["tipo"] != null)
+                {
+                    if (Session["tipo"].ToString() == "0")
+                    {
+                        pnlEspecialidade.Visible = true;
+                    }
                 }
             }
         }
@@ -84,7 +81,7 @@ namespace wwwroot.medico
             id_especialidade = id_especialidade.Remove(id_especialidade.LastIndexOf(','));
 
             command = "SELECT ep.id_especialidade, ep.especialidade FROM especialidade ep inner join medico md on ep.documento = md.documento  where id_especialidade not in(" + id_especialidade + ")";
-
+            hdnEspecialidades.Value = id_especialidade == "0" ? "" : id_especialidade;
             dt = dao.ExecuteReader(command, CommandType.Text);
             lstEspecialidade.DataSource = dt;
             lstEspecialidade.DataValueField = "id_especialidade";
@@ -109,7 +106,7 @@ namespace wwwroot.medico
                 Response.Write("<script>alert(' CEP invalido');</script>");
                 return false;
             }
-            else if (lstLista.Items.Count == 0)
+            else if (hdnEspecialidades.Value.Split(",".ToCharArray()).Count() == 0)
             {
                 Response.Write("<script>alert('Escolha pelo menos 1 especialidade ');</script>");
                 return false;
@@ -179,7 +176,7 @@ namespace wwwroot.medico
             if (insert)
             {
                 Session.Remove("IdEdicao");
-                Response.Write("<script>alert(' dados inserido com sucesso " + szEsp + "');window.location.href = '/'</script>");
+                Response.Write("<script>alert(' dados atualizado com sucesso " + szEsp + "');window.location.href = '/'</script>");
             }
             else
                 Response.Write("<script>alert('" + insert + "');</script>");
@@ -208,10 +205,12 @@ namespace wwwroot.medico
 
             try
             {
-
+                int result;
                 string msg = dao.ExecuteCommand("pr_in_medico", CommandType.StoredProcedure).ToString();
-                if (msg.Contains("sucesso"))
+                int.TryParse(msg, out result);
+                if (result > 0)
                 {
+                    string szEsp = Salva_especialidade(result);
                     Response.Write("<script>alert('" + msg + "');window.location.href = '/'</script>");
                 }
                 else
@@ -247,6 +246,7 @@ namespace wwwroot.medico
                 txtCPF.Text = rd.Rows[0]["cpf"].ToString();
                 txtRG.Text = rd.Rows[0]["rg"].ToString();
                 ddlDocumento.SelectedValue = rd.Rows[0]["documento"].ToString();
+                ddlDocumento.Enabled = false;
                 CarregaEspecialidades(id);
 
             }
@@ -259,32 +259,34 @@ namespace wwwroot.medico
         public string Salva_especialidade(int id)
         {
             string msg = "";
-            // primeiro deleta as ja existentes         
-            Dao dao = new Dao();
+            if (!string.IsNullOrEmpty(hdnEspecialidades.Value))
+            {
+                // primeiro deleta as ja existentes         
+                Dao dao = new Dao();
 
-            try
-            {
-                dao.ExecuteCommand("delete from medicoespecialidade where medico_id = " + id, CommandType.Text);
-            }
-            catch (Exception ex)
-            {
-                msg = "\nerro ao inserir as expecialidades erro: " + ex.Message;
-            }
-
-            try
-            {
-                string commandos = "";
-                foreach (ListItem item in lstLista.Items)
+                try
                 {
-                    commandos += "insert into medicoespecialidade(" + id + "," + item.Value + ");";
+                    dao.ExecuteCommand("delete from medicoespecialidade where medico_id = " + id, CommandType.Text);
                 }
-                dao.ExecuteCommand(commandos, CommandType.Text);
-            }
-            catch (Exception ex)
-            {
-                msg = "erro ao inserir as expecialidades erro: " + ex.Message;
-            }
+                catch (Exception ex)
+                {
+                    msg = "\nerro ao inserir as expecialidades erro: " + ex.Message;
+                }
 
+                try
+                {
+                    string commandos = "";
+                    foreach (string item in hdnEspecialidades.Value.Split(",".ToCharArray()))
+                    {
+                        commandos += "insert into medicoespecialidade values (" + id + "," + item + ");";
+                    }
+                    dao.ExecuteCommand(commandos, CommandType.Text);
+                }
+                catch (Exception ex)
+                {
+                    msg = "erro ao inserir as expecialidades";
+                }
+            }
             return msg;
         }
         protected void ddlDocumento_SelectedIndexChanged(object sender, EventArgs e)
@@ -292,27 +294,31 @@ namespace wwwroot.medico
             string szTipo = "";
             if (ddlDocumento.SelectedValue == "CRM")
                 szTipo = "CRM";
-            else
+            else if (ddlDocumento.SelectedValue == "CRO")
                 szTipo = "CRO";
 
             Dao dao = new Dao();
-
-            try
+            if (!string.IsNullOrEmpty(szTipo))
             {
-                DataTable dt = dao.ExecuteReader("SELECT * FROM especialidade where documento = '" + szTipo + "';", CommandType.Text);
-                lstEspecialidade.DataSource = dt;
-                lstEspecialidade.DataValueField = "id_especialidade";
-                lstEspecialidade.DataTextField = "especialidade";
-                lstEspecialidade.DataBind();
-                pnlEspecialidade.Visible = true;
-                lstEspecialidade.Dispose();
-                lstLista.Dispose();
+                try
+                {
+                    DataTable dt = dao.ExecuteReader("SELECT * FROM especialidade where documento = '" + szTipo + "';", CommandType.Text);
+                    lstEspecialidade.Items.Clear();
+                    lstEspecialidade.DataSource = dt;
+                    lstEspecialidade.DataValueField = "id_especialidade";
+                    lstEspecialidade.DataTextField = "especialidade";
+                    lstEspecialidade.DataBind();
+                    pnlEspecialidade.Visible = true;
+                    lstEspecialidade.Dispose();
+                    lstLista.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
+            else
+                pnlEspecialidade.Visible = false;
         }
     }
 }

@@ -81,7 +81,7 @@
                                          <a href="/usuario/cadastrar.aspx" style="display:none" id="lnkCadastrar" class="alert-link float-right"/>Cadastrar-se</a>
                                     </div>
                                     <asp:Label Text="text" runat="server" Visible="false" ID="lblMsg" />
-                                    <asp:UpdateProgress runat="server" AssociatedUpdatePanelID="pnlLogin" style="right: 0px;position: absolute;margin-right: 30px;">
+                                    <asp:UpdateProgress runat="server" AssociatedUpdatePanelID="pnlLogin" DynamicLayout="true" style="right: 0px;position: absolute;margin-right: 30px;">
                                         <ProgressTemplate>
                                             <img src="/img/loading.gif" />
                                         </ProgressTemplate>
@@ -91,15 +91,12 @@
                                         <asp:Button Text="Entrar" runat="server" CssClass="btn btn-outline-success" ID="btnEntrar" OnClick="btnEntrar_Click" ValidationGroup="login" />
                                     </div>
                                 </div>
-
-
                             </ContentTemplate>
                         </asp:UpdatePanel>
 
                     </div>
                 </div>
             </div>
-
 
             <script src="/scripts/jquery.js"></script>
             <script src="/scripts/popper.js"></script>

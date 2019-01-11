@@ -59,9 +59,10 @@ namespace Classes.Code
                 connection.Open();
                 return com.ExecuteScalar();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                throw ex;
+                //return null;
             }
             finally
             {
