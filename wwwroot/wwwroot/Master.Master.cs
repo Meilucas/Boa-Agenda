@@ -114,14 +114,36 @@ namespace wwwroot
             Session.RemoveAll();
             Response.Redirect("/");
         }
-        private void LiberaMenuADM()
+        private void LiberarMenuADM()
         {
 
         }
+        private void LiberarMenuMedico() { }
+        private void LiberarMenuFuncionario() { }
         public void SendScript(string script)
         {
             ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "script", script, true);
         }
+        public void MontarMenu()
+        {
+            if (Session["tipo"] != null)
+            {
+                switch (Convert.ToInt32(Session["tipo"]))
+                {
+                    case 0: // se for 0 menu é do admin
 
+                        break;
+                    case 1: // se for 1 menu é de usuario comum
+                        LiberarMenuFuncionario();
+                        break;
+                    case 2: // se for 1 menu é de usuario comum
+                        LiberarMenuMedico();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
+
 }
