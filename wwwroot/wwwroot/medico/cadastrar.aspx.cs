@@ -49,7 +49,11 @@ namespace wwwroot.medico
                     else if (Session["tipo"].ToString() == "0") // se for administrador ele não faz nada
                         return;
                     else
-                        Response.Write("<script>alert('você não tem permição para editar esse cadastro');window.location.href = '/'</script>");
+                        Response.Write("<script>alert('você não tem permição para editar esse cadastro.');window.location.href = '/'</script>");
+                }
+                else
+                {
+                    Response.Write("<script>alert('O Cadastro de novos medicos so pode ser feito pelo admin do site.');window.location.href = '/'</script>");
                 }
                 if (Session["tipo"] != null)
                 {
