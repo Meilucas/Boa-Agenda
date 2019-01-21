@@ -2,7 +2,7 @@
 
 <asp:Content ContentPlaceHolderID="body" runat="server">
 
-    <div class="form-inline">
+    <div class="form-inline mb-2">
         <asp:TextBox runat="server" ID="txtPesquisa" CssClass="form-control" />
         <asp:ImageButton ImageUrl="~/img/icons/lupa.png" AlternateText="pesquisar" runat="server" ID="btnPequisar" OnClick="btnPequisar_Click" CssClass="icon" />
     </div>

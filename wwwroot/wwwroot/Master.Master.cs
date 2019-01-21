@@ -16,6 +16,8 @@ namespace wwwroot
         {
             if (!IsPostBack)
                 VerificaLogin();
+
+            MontarMenu();
         }
         protected void btnEntrar_Click(object sender, EventArgs e)
         {
@@ -107,6 +109,8 @@ namespace wwwroot
                 lblname.Visible = true;
                 lblname.InnerText = Session["nome"].ToString();
             }
+
+
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -131,18 +135,21 @@ namespace wwwroot
                 switch (Convert.ToInt32(Session["tipo"]))
                 {
                     case 0: // se for 0 menu é do admin
-
+                        MenuRoot.Visible = true;
                         break;
                     case 1: // se for 1 menu é de usuario comum
-                        LiberarMenuFuncionario();
+                        MenuFuncionario.Visible = true;
                         break;
                     case 2: // se for 1 menu é de usuario comum
-                        LiberarMenuMedico();
+                        MenuMedico.Visible = true;
                         break;
                     default:
+                        MenuFuncionario.Visible = true;
                         break;
                 }
             }
+            else
+                MenuFuncionario.Visible = true;
         }
     }
 

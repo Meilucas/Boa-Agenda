@@ -5,14 +5,13 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Classes.Code;
 using MySql.Data.MySqlClient;
 
 namespace wwwroot.usuario
 {
     public partial class cadastrar : System.Web.UI.Page
     {
-        string szConnection = "Server=127.0.0.1;Database=boa_agenda;Uid=root;Pwd=root;";
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["tipo"] != null)
@@ -98,29 +97,23 @@ namespace wwwroot.usuario
 
         private void Salvar()
         {
-            MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection con = new MySqlConnection(szConnection);
-
-            cmd.Connection = con;
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "pr_in_user";
-            cmd.Parameters.AddWithValue("_nome", txtNome.Text);
-            cmd.Parameters.AddWithValue("_sobrenome", txtSobreNome.Text);
-            cmd.Parameters.AddWithValue("_cep", txtCep.Text);
-            cmd.Parameters.AddWithValue("_telefone", txtTelefone.Text);
-            cmd.Parameters.AddWithValue("_celular", txtCel.Text);
-            cmd.Parameters.AddWithValue("_numero", txtnumero.Text);
-            cmd.Parameters.AddWithValue("_email", txtEmail.Text);
-            cmd.Parameters.AddWithValue("_login", txtLogin.Text);
-            cmd.Parameters.AddWithValue("_senha", txtSenha.Text);
-            cmd.Parameters.AddWithValue("_endereco", txtEndereco.Text);
-            cmd.Parameters.AddWithValue("_cpf", txtCPF.Text);
-            cmd.Parameters.AddWithValue("_rg", txtRG.Text);
+            Dao db = new Dao();
+            db.AddParameter("_nome", txtNome.Text);
+            db.AddParameter("_sobrenome", txtSobreNome.Text);
+            db.AddParameter("_cep", txtCep.Text);
+            db.AddParameter("_telefone", txtTelefone.Text);
+            db.AddParameter("_celular", txtCel.Text);
+            db.AddParameter("_numero", txtnumero.Text);
+            db.AddParameter("_email", txtEmail.Text);
+            db.AddParameter("_login", txtLogin.Text);
+            db.AddParameter("_senha", txtSenha.Text);
+            db.AddParameter("_endereco", txtEndereco.Text);
+            db.AddParameter("_cpf", txtCPF.Text);
+            db.AddParameter("_rg", txtRG.Text);
+            object ob = db.ExecuteCommand("pr_in_user", CommandType.StoredProcedure);
             try
             {
-                con.Open();
-                string msg = cmd.ExecuteScalar().ToString();
-                con.Close();
+                string msg = ob.ToString();
                 if (msg.Contains("sucesso"))
                 {
                     Response.Write("<script>alert('" + msg + "');window.location.href = '/'</script>");
@@ -155,31 +148,25 @@ namespace wwwroot.usuario
         }
         private void Editar(int id)
         {
-
-            MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection con = new MySqlConnection(szConnection);
-            cmd.Connection = con;
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "pr_up_user";
-            cmd.Parameters.AddWithValue("_id", id);
-            cmd.Parameters.AddWithValue("_nome", txtNome.Text);
-            cmd.Parameters.AddWithValue("_sobrenome", txtSobreNome.Text);
-            cmd.Parameters.AddWithValue("_cep", txtCep.Text);
-            cmd.Parameters.AddWithValue("_telefone", txtTelefone.Text);
-            cmd.Parameters.AddWithValue("_celular", txtCel.Text);
-            cmd.Parameters.AddWithValue("_numero", txtnumero.Text);
-            cmd.Parameters.AddWithValue("_email", txtEmail.Text);
-            cmd.Parameters.AddWithValue("_login", txtLogin.Text);
-            cmd.Parameters.AddWithValue("_senha", txtSenha.Text);
-            cmd.Parameters.AddWithValue("_endereco", txtEndereco.Text);
-            cmd.Parameters.AddWithValue("_cpf", txtCPF.Text);
-            cmd.Parameters.AddWithValue("_rg", txtRG.Text);
-
+            Dao db = new Dao();
+           
+            db.AddParameter("_id", id);
+            db.AddParameter("_nome", txtNome.Text);
+            db.AddParameter("_sobrenome", txtSobreNome.Text);
+            db.AddParameter("_cep", txtCep.Text);
+            db.AddParameter("_telefone", txtTelefone.Text);
+            db.AddParameter("_celular", txtCel.Text);
+            db.AddParameter("_numero", txtnumero.Text);
+            db.AddParameter("_email", txtEmail.Text);
+            db.AddParameter("_login", txtLogin.Text);
+            db.AddParameter("_senha", txtSenha.Text);
+            db.AddParameter("_endereco", txtEndereco.Text);
+            db.AddParameter("_cpf", txtCPF.Text);
+            db.AddParameter("_rg", txtRG.Text);
+            object ob = db.ExecuteCommand("pr_up_user", CommandType.StoredProcedure);
             try
             {
-                con.Open();
-                string msg = cmd.ExecuteScalar().ToString();
-                con.Close();
+                string msg = ob.ToString();
                 if (msg.Contains("sucesso"))
                 {
                     Session.Remove("IdEdicao");
@@ -195,37 +182,30 @@ namespace wwwroot.usuario
         }
         public void PreencheCampos(int id)
         {
-            MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection con = new MySqlConnection(szConnection);
-            cmd.Connection = con;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "select * from usuarios where id_usuario = " + id;
+            Dao db = new Dao();
             try
             {
-                con.Open();
-                MySqlDataReader rd = cmd.ExecuteReader();
+                DataTable rd = db.ExecuteReader("select * from usuarios where id_usuario = " + id,CommandType.Text);
+               
 
-
-                while (rd.Read())
+                if(rd !=null)
                 {
-                    txtNome.Text = rd["nome"].ToString();
-                    txtSobreNome.Text = rd["sobrenome"].ToString();
-                    txtCep.Text = rd["cep"].ToString();
-                    txtTelefone.Text = rd["telefone"].ToString();
-                    txtCel.Text = rd["celular"].ToString();
-                    txtnumero.Text = rd["numero"].ToString();
-                    txtEmail.Text = rd["email"].ToString();
-                    txtLogin.Text = rd["login"].ToString();
+                    txtNome.Text = rd.Rows[0]["nome"].ToString();
+                    txtSobreNome.Text = rd.Rows[0]["sobrenome"].ToString();
+                    txtCep.Text = rd.Rows[0]["cep"].ToString();
+                    txtTelefone.Text = rd.Rows[0]["telefone"].ToString();
+                    txtCel.Text = rd.Rows[0]["celular"].ToString();
+                    txtnumero.Text = rd.Rows[0]["numero"].ToString();
+                    txtEmail.Text = rd.Rows[0]["email"].ToString();
+                    txtLogin.Text = rd.Rows[0]["login"].ToString();
                     txtSenha.TextMode = TextBoxMode.SingleLine;
-                    txtSenha.Text = rd["senha"].ToString();
+                    txtSenha.Text = rd.Rows[0]["senha"].ToString();
                     txtSenha2.TextMode = TextBoxMode.SingleLine;
-                    txtSenha2.Text = rd["senha"].ToString();
-                    txtEndereco.Text = rd["endereco"].ToString();
-                    txtCPF.Text = rd["cpf"].ToString();
-                    txtRG.Text = rd["rg"].ToString();
-
-                }
-                con.Close();
+                    txtSenha2.Text = rd.Rows[0]["senha"].ToString();
+                    txtEndereco.Text = rd.Rows[0]["endereco"].ToString();
+                    txtCPF.Text = rd.Rows[0]["cpf"].ToString();
+                    txtRG.Text = rd.Rows[0]["rg"].ToString();
+                }         
             }
             catch (Exception ex)
             {

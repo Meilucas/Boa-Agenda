@@ -49,6 +49,33 @@ namespace wwwroot {
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lblname;
         
         /// <summary>
+        /// Controle MenuFuncionario.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuFuncionario;
+        
+        /// <summary>
+        /// Controle MenuMedico.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuMedico;
+        
+        /// <summary>
+        /// Controle MenuRoot.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuRoot;
+        
+        /// <summary>
         /// Controle lnkLogin.
         /// </summary>
         /// <remarks>

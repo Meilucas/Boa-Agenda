@@ -25,15 +25,58 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="menunav">
-                        <ul class="navbar-nav mr-auto">
+                        <!-- Menu do usuario comun do site -->
+                        <ul class="navbar-nav mr-auto" runat="server" id="MenuFuncionario" visible="false">
                             <li class="nav-item">
                                 <a class="nav-link" href="/">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Cadastro</a>
+                                <a class="nav-link" href="/usuario/cadastrar.aspx">Cadastro</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Disabled</a>
+                                <a class="nav-link" href="/agenda">Agendar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Politica De Privacidade</a>
+                            </li>
+                        </ul>
+                        <!-- Menu do medico do site -->
+                        <ul class="navbar-nav mr-auto" runat="server" id="MenuMedico" visible="false">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/medico/cadastrar.aspx">Cadastro</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/agenda">Agendar</a>
+                            </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="#">Politica De Privacidade</a>
+                            </li>
+                        </ul>
+                        <!-- Menu do admin do site -->
+                        <ul class="navbar-nav mr-auto" runat="server" id="MenuRoot" visible="false">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/usuario" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Funcionario</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                     <a class="dropdown-item" href="/medico">Listar</a>
+                                      <a class="dropdown-item" href="/medico/cadastrar.aspx">Cadastrar</a>
+                                      <div class="dropdown-divider"></div>
+                                      <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </li>
+                             <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/usuario" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Usuarios</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="/usuario">Listar</a>
+                                    <a class="dropdown-item" href="#">Cadastrar</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
                             </li>
                         </ul>
 

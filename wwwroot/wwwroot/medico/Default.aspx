@@ -3,11 +3,10 @@
 <asp:Content ContentPlaceHolderID="body" runat="server">
 
     
-    <div class="form-inline">
+    <div class="form-inline mb-2">
         <asp:TextBox runat="server" ID="txtPesquisa" CssClass="form-control" />
-        <asp:ImageButton ImageUrl="~/img/icons/lupa.png" AlternateText="pesquisar" runat="server" ID="btnPequisar" OnClick="btnPequisar_Click" CssClass="icon" />
+        <asp:ImageButton ImageUrl="~/img/icons/lupa.png" AlternateText="pesquisar" runat="server" ID="btnPequisar" OnClick="btnPequisar_Click" CssClass="icon"/>
     </div>
-
 
     <div class="table-responsive">
         <asp:GridView runat="server" ID="gdvUser" AutoGenerateColumns="False" CssClass=" table table-hover" OnSelectedIndexChanging="gdvUser_SelectedIndexChanging">
@@ -18,7 +17,7 @@
                 <asp:BoundField HeaderText="Email" DataField="email" />
                 <asp:BoundField HeaderText="Cpf" DataField="cpf" />
                 <asp:BoundField HeaderText="RG" DataField="rg" />              
-                <asp:CommandField  HeaderText="#" ShowSelectButton="true"  />
+                <asp:CommandField  HeaderText="#" ShowSelectButton="true" SelectText="Editar" />
             </Columns>
         </asp:GridView>
     </div>

@@ -3,6 +3,7 @@
 
 /* Icons */
 .icon {
+    margin-left: 20px;
     height: 30px;
     width: 30px;
     background-size: contain !important; 
