@@ -79,6 +79,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="agenda\Agendar.aspx" />
     <Content Include="agenda\Default.aspx" />
     <Content Include="css\jquery-ui.css" />
     <Content Include="css\jquery-ui.structure.css" />
@@ -114,6 +115,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="agenda\Agendar.aspx.cs">
+      <DependentUpon>Agendar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="agenda\Agendar.aspx.designer.cs">
+      <DependentUpon>Agendar.aspx</DependentUpon>
+    </Compile>
     <Compile Include="agenda\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

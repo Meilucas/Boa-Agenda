@@ -6,7 +6,6 @@
         <div>
             <asp:GridView runat="server">
                 <Columns>
-                    <asp:BoundField HeaderText="ID" DataField="id_consulta" />
                     <asp:BoundField HeaderText="ID" DataField="hora" />
                     <asp:BoundField HeaderText="ID" DataField="dia" />
                     <asp:BoundField HeaderText="ID" DataField="usuario" />
