@@ -6,11 +6,6 @@
             display: inline-block;
             margin-left: 10px;
         }
-
-        #rdlistHorarios label {
-            display: inline-block;
-            margin-left: 5px;
-        }
     </style>
 </asp:Content>
 <asp:Content runat="server" ContentPlaceHolderID="body">
@@ -35,20 +30,59 @@
             </div>
             <div class="form-group">
                 <div class="form-inline">
-                    <asp:Button Text="Buscar" runat="server" CssClass="btn btn-outline-success" />
+                    <asp:Button Text="Buscar" runat="server" CssClass="btn btn-outline-success" ID="btnBuscarMedico" OnClick="btnBuscarMedico_Click" />
                 </div>
             </div>
         </div>
     </fieldset>
-    <fieldset>
-        <legend>Horarios</legend>
-        <div class="container">
-            <div class="form-group">
-                <asp:RadioButtonList runat="server" RepeatLayout="Flow" ID="rdlistHorarios" ClientIDMode="Static" RepeatColumns="3">
-                    <asp:ListItem Text="text1" />
-                    <asp:ListItem Text="text2" />
-                </asp:RadioButtonList>
+
+    <asp:PlaceHolder runat="server" ID="pnlMedico" Visible="false">
+        <fieldset>
+            <asp:HiddenField runat="server" ID="hdnIdMedico" Value="0" />
+            <legend>Medicos</legend>
+            <div>
+                <table>
+                    <tr>
+                        <th>Medico</th>
+                        <th>Endereço</th>
+                        <th>#</th>
+                    </tr>
+                    <tr>
+                        <asp:ListView runat="server" ID="lvMedicos" OnItemDataBound="lvMedicos_ItemDataBound">
+                            <ItemTemplate>
+                                <td>
+                                    <asp:Literal Text="text" runat="server" ID="txtMedico" /></td>
+                                <td>
+                                    <asp:Literal Text="text" runat="server" ID="txtEndereco" /></td>
+                                <td>
+                                    <asp:Button Text="Escolher" runat="server" ID="btnEscolherMedico" OnCommand="btnEscolherMedico_Command" CommandName="escolher" /></td>
+                            </ItemTemplate>
+                        </asp:ListView>
+                    </tr>
+                </table>
+
             </div>
-        </div>
-    </fieldset>
+        </fieldset>
+    </asp:PlaceHolder>
+
+    <asp:PlaceHolder runat="server" ID="pnlData" Visible="false">
+        <fieldset>
+            <legend>Data</legend>
+            <asp:TextBox runat="server" ID="txtData" TextMode="Date" CssClass="form-control" Width="50%" AutoPostBack="true" />
+        </fieldset>
+    </asp:PlaceHolder>
+
+    <asp:PlaceHolder runat="server" ID="pnlHorarios" Visible="false">
+        <fieldset style="width: 50%">
+            <legend>Horarios</legend>
+            <div class="container">
+                <div class="form-group">
+                    <asp:RadioButtonList runat="server" RepeatLayout="Table" ID="rdlistHorarios" ClientIDMode="Static" RepeatColumns="3" CssClass="table">
+                        <asp:ListItem Text="text1" />
+                        <asp:ListItem Text="text2" />
+                    </asp:RadioButtonList>
+                </div>
+            </div>
+        </fieldset>
+    </asp:PlaceHolder>
 </asp:Content>
