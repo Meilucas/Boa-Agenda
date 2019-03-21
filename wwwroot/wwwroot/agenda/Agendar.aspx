@@ -63,26 +63,28 @@
 
             </div>
         </fieldset>
-    </asp:PlaceHolder>
 
-    <asp:PlaceHolder runat="server" ID="pnlData" Visible="false">
-        <fieldset>
-            <legend>Data</legend>
-            <asp:TextBox runat="server" ID="txtData" TextMode="Date" CssClass="form-control" Width="50%" AutoPostBack="true" />
-        </fieldset>
-    </asp:PlaceHolder>
 
-    <asp:PlaceHolder runat="server" ID="pnlHorarios" Visible="false">
-        <fieldset style="width: 50%">
-            <legend>Horarios</legend>
-            <div class="container">
-                <div class="form-group">
-                    <asp:RadioButtonList runat="server" RepeatLayout="Table" ID="rdlistHorarios" ClientIDMode="Static" RepeatColumns="3" CssClass="table">
-                        <asp:ListItem Text="text1" />
-                        <asp:ListItem Text="text2" />
-                    </asp:RadioButtonList>
-                </div>
-            </div>
-        </fieldset>
+        <asp:PlaceHolder runat="server" ID="pnlData" Visible="false">
+            <fieldset>
+                <legend>Data</legend>
+                <asp:TextBox runat="server" ID="txtData" TextMode="Date" CssClass="form-control" Width="50%" AutoPostBack="true" />
+            </fieldset>
+
+
+            <asp:PlaceHolder runat="server" ID="pnlHorarios" Visible="false">
+                <fieldset style="width: 50%">
+                    <legend>Horarios</legend>
+                    <div class="container">
+                        <div class="form-group">
+                            <asp:RadioButtonList runat="server" RepeatLayout="Table" ID="rdlistHorarios" ClientIDMode="Static" RepeatColumns="3" CssClass="table">
+                                <asp:ListItem Text="text1" />
+                                <asp:ListItem Text="text2" />
+                            </asp:RadioButtonList>
+                        </div>
+                    </div>
+                </fieldset>
+            </asp:PlaceHolder>
+        </asp:PlaceHolder>
     </asp:PlaceHolder>
 </asp:Content>

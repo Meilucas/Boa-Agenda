@@ -14,11 +14,11 @@ namespace wwwroot.agenda
         /// <summary>
         /// hora que a clinica abre
         /// </summary>
-        public TimeSpan Abertura = TimeSpan.Parse("08:30");
+        public DateTime Abertura = DateTime.Parse("08:30");
         /// <summary>
         /// hora que a clinica fecha
         /// </summary>
-        public TimeSpan Fechamento = TimeSpan.Parse("18:30");
+        public DateTime Fechamento = DateTime.Parse("18:30");
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -28,7 +28,7 @@ namespace wwwroot.agenda
                 txtData.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 PreencherEspecialidade();
             }
-            MostrarHorarios(txtData.Text);
+            
         }
 
         public void PreencherEspecialidade(string documento = "CRM")
@@ -48,18 +48,43 @@ namespace wwwroot.agenda
 
         public void PreencherHorarios(DateTime dta, int idMedico)
         {
-            List<TimeSpan> horarios = new List<TimeSpan>();
+            List<DateTime> horarios = VerificarAgendaData(dta,idMedico);
 
             while (Abertura <= Fechamento)
             {
-                horarios.Add(Abertura);
-                Abertura = Abertura.Add(new TimeSpan(1, 0, 0));
+                if (true)
+                {
+                    horarios.Add(Abertura);
+                    Abertura = Abertura.Add(new TimeSpan(1, 0, 0));
+                }
             }
 
             rdlistHorarios.DataSource = horarios;
+            rdlistHorarios.DataTextFormatString = "HH:mm";
             rdlistHorarios.DataBind();
         }
+        /// <summary>
+        /// Verifica os horarios ocupados
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public List<DateTime> VerificarAgendaData(DateTime dt, int idMedico)
+        {
+            Dao db = new Dao();
+            List<DateTime> horarios = new List<DateTime>();
+            db.AddParameter("data", dt);//.ToString("yyyy-MM-dd"));
+            db.AddParameter("medico", idMedico);
+            DataTable tb = db.ExecuteReader("select * from agenda where data = @data and atendente = @medico", CommandType.Text);
+            if (tb != null)
+            {
+                foreach (DataRow item in tb.Rows)
+                {
+                    horarios.Add(Convert.ToDateTime(dt.ToString("yyyy-MM-dd") + " "+ item["hora"]));
+                }
 
+            }
+            return horarios;
+        }
         public void MostrarHorarios(string dta)
         {
             DateTime date;
@@ -67,11 +92,6 @@ namespace wwwroot.agenda
             if (DateTime.TryParse(dta, out date) && idMedico > 0)
             {
                 PreencherHorarios(date, idMedico);
-                
-            }
-            else
-            {
-              
             }
         }
 
@@ -107,11 +127,17 @@ namespace wwwroot.agenda
             {
                 lvMedicos.DataSource = tb.Rows;
                 lvMedicos.DataBind();
+                pnlMedico.Visible = true; // mostra os medicos
             }
             else
             {
                 hdnIdMedico.Value = "0";
+                pnlMedico.Visible = true;
             }
+        }
+        public void MostrarMensagem(string msg)
+        {
+            Response.Write("<script>alert('" + msg + "');</script>");
         }
     }
 }
