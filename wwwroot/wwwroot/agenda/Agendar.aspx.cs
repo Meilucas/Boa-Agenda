@@ -22,7 +22,7 @@ namespace wwwroot.agenda
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+
 
             if (!IsPostBack)
             {
@@ -171,7 +171,8 @@ namespace wwwroot.agenda
                 db.AddParameter("dia", txtData.Text);
                 db.AddParameter("usuario", Session["id"].ToString());
                 db.AddParameter("atendente", hdnIdMedico.Value);
-                var obj = db.ExecuteCommand("insert into agenda (hora, dia, usuario, atendente) values (@hora,@dia,@usuario,@atendente) ", CommandType.Text);
+                db.AddParameter("esp", ddlEspecialidades.SelectedValue);
+                var obj = db.ExecuteCommand("insert into agenda (hora, dia, usuario, atendente,especialidade_id) values (@hora,@dia,@usuario,@atendente,@esp) ", CommandType.Text);
             }
         }
         public bool Validar()
@@ -185,6 +186,11 @@ namespace wwwroot.agenda
             else if (hdnIdMedico.Value == "0")
             {
                 MostrarMensagem("Medico Invalido");
+                return false;
+            }
+            else if (ddlEspecialidades.SelectedValue == "")
+            {
+                MostrarMensagem("Escolha uma especialidade");
                 return false;
             }
             else if (rdlistHorarios.SelectedValue == "")
