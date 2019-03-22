@@ -22,13 +22,27 @@ namespace wwwroot.agenda
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            
 
             if (!IsPostBack)
             {
+                pnlPage.Visible = false;
+                if (Session["id"] != null)  //verifica se o usuario esta logado
+                {
+                    if (Session["tipo"].ToString() == "1") // verifica se ele é um medico se não for ele redireciona para home
+                    {
+                        pnlPage.Visible = true;
+                    }
+                    else
+                        Response.Write("<script>alert('Desculpe mas essa pagina é somente para usuarios');window.location.href = '/'</script>");
+                }
+                else
+                    Response.Write("<script>alert('Efetue login para liberar a pagina');</script>");
+
                 txtData.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 PreencherEspecialidade();
             }
-            
+
         }
 
         public void PreencherEspecialidade(string documento = "CRM")
@@ -48,19 +62,20 @@ namespace wwwroot.agenda
 
         public void PreencherHorarios(DateTime dta, int idMedico)
         {
-            List<DateTime> horarios = VerificarAgendaData(dta,idMedico);
+            List<string> horarios = new List<string>();
+            List<DateTime> horariosAgendados = VerificarAgendaData(dta, idMedico);
 
             while (Abertura <= Fechamento)
             {
-                if (true)
+                if (!horariosAgendados.Contains(Abertura))
                 {
-                    horarios.Add(Abertura);
-                    Abertura = Abertura.Add(new TimeSpan(1, 0, 0));
+                    horarios.Add(Abertura.ToString("HH:mm"));
                 }
+                Abertura = Abertura.Add(new TimeSpan(1, 0, 0));
             }
-
+            pnlHorarios.Visible = horarios.Count > 0;
             rdlistHorarios.DataSource = horarios;
-            rdlistHorarios.DataTextFormatString = "HH:mm";
+            //   rdlistHorarios.DataTextFormatString = "HH:mm";
             rdlistHorarios.DataBind();
         }
         /// <summary>
@@ -72,21 +87,21 @@ namespace wwwroot.agenda
         {
             Dao db = new Dao();
             List<DateTime> horarios = new List<DateTime>();
-            db.AddParameter("data", dt);//.ToString("yyyy-MM-dd"));
+            db.AddParameter("data", dt.ToString("yyyy-MM-dd"));
             db.AddParameter("medico", idMedico);
-            DataTable tb = db.ExecuteReader("select * from agenda where data = @data and atendente = @medico", CommandType.Text);
+            DataTable tb = db.ExecuteReader("select * from agenda where dia = @data and atendente = @medico", CommandType.Text);
             if (tb != null)
             {
                 foreach (DataRow item in tb.Rows)
                 {
-                    horarios.Add(Convert.ToDateTime(dt.ToString("yyyy-MM-dd") + " "+ item["hora"]));
+                    horarios.Add(Convert.ToDateTime(item["hora"].ToString()));
                 }
-
             }
             return horarios;
         }
         public void MostrarHorarios(string dta)
         {
+            pnlHorarios.Visible = false;
             DateTime date;
             int idMedico = Convert.ToInt32(hdnIdMedico.Value);
             if (DateTime.TryParse(dta, out date) && idMedico > 0)
@@ -100,7 +115,7 @@ namespace wwwroot.agenda
             if (e.CommandName == "escolher")
             {
                 hdnIdMedico.Value = e.CommandArgument.ToString();
-                MostrarHorarios(txtData.Text);
+                pnlData.Visible = true;
             }
         }
 
@@ -123,21 +138,77 @@ namespace wwwroot.agenda
             db.AddParameter("doc", ddlTipoDocumento.SelectedValue);
             db.AddParameter("esp", ddlEspecialidades.SelectedValue);
             DataTable tb = db.ExecuteReader("select * from medico m inner join medicoespecialidade e where e.medico_id = m.id_medico and m.documento = @doc and e.especialidade_id = @esp", CommandType.Text);
+
+            pnlData.Visible = false;
             if (tb.Rows.Count > 0) //Validação caso a especialidade existe mas o medico não
             {
                 lvMedicos.DataSource = tb.Rows;
                 lvMedicos.DataBind();
-                pnlMedico.Visible = true; // mostra os medicos
+                pnlMedico.Visible = true; // mostra os medicos               
             }
             else
             {
                 hdnIdMedico.Value = "0";
-                pnlMedico.Visible = true;
+                pnlMedico.Visible = false;
             }
         }
         public void MostrarMensagem(string msg)
         {
             Response.Write("<script>alert('" + msg + "');</script>");
+        }
+
+        protected void btnBuscarHorarios_Click(object sender, EventArgs e)
+        {
+            MostrarHorarios(txtData.Text);
+        }
+
+        protected void btnAgendar_Click(object sender, EventArgs e)
+        {
+            if (Validar())
+            {
+                Dao db = new Dao();
+                db.AddParameter("hora", rdlistHorarios.SelectedValue);
+                db.AddParameter("dia", txtData.Text);
+                db.AddParameter("usuario", Session["id"].ToString());
+                db.AddParameter("atendente", hdnIdMedico.Value);
+                var obj = db.ExecuteCommand("insert into agenda (hora, dia, usuario, atendente) values (@hora,@dia,@usuario,@atendente) ", CommandType.Text);
+            }
+        }
+        public bool Validar()
+        {
+            DateTime dt;
+            if (!DateTime.TryParse(txtData.Text, out dt))
+            {
+                MostrarMensagem("Data Invalida");
+                return false;
+            }
+            else if (hdnIdMedico.Value == "0")
+            {
+                MostrarMensagem("Medico Invalido");
+                return false;
+            }
+            else if (rdlistHorarios.SelectedValue == "")
+            {
+                MostrarMensagem("Selecione um horario");
+                return false;
+            }
+
+            /* Verifica se o horario não foi preenchido antes no tempo que ele ficou esperando os horarios*/
+            Dao db = new Dao();
+            List<DateTime> horarios = new List<DateTime>();
+            db.AddParameter("data", dt.ToString("yyyy-MM-dd"));
+            db.AddParameter("hora", rdlistHorarios.SelectedValue);
+            db.AddParameter("medico", hdnIdMedico.Value);
+            DataTable tb = db.ExecuteReader("select * from agenda where dia = @data and atendente = @medico and hora = @hora", CommandType.Text);
+            if (tb != null)
+            {
+                if (tb.Rows.Count > 0)
+                {
+                    MostrarMensagem("Desculpe, mas esse horário ja foi escolhido por outra pessoa");
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

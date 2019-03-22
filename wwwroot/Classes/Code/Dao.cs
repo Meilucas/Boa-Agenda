@@ -33,7 +33,7 @@ namespace Classes.Code
                 ad.Fill(table);
                 return table;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }

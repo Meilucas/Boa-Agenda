@@ -64,7 +64,7 @@ namespace wwwroot
 
 
             Dao db = new Dao();
-            DataTable tb = db.ExecuteReader("select * from medico where senha = '" + txtSenha.Text + "' and login = '" + txtLogin.Text + "'", CommandType.Text);
+            DataTable tb = db.ExecuteReader("select * from usuarios where senha = '" + txtSenha.Text + "' and login = '" + txtLogin.Text + "'", CommandType.Text);
             if (tb != null)
             {
                 if (tb.Rows.Count > 0)
@@ -118,12 +118,10 @@ namespace wwwroot
             Session.RemoveAll();
             Response.Redirect("/");
         }
-        private void LiberarMenuADM()
-        {
-
-        }
-        private void LiberarMenuMedico() { }
-        private void LiberarMenuFuncionario() { }
+        /// <summary>
+        /// metodo que vai enviar os scipts para o lado do cliente 
+        /// </summary>
+        /// <param name="script"></param>
         public void SendScript(string script)
         {
             ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "script", script, true);

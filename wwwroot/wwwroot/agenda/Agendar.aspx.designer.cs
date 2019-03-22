@@ -13,6 +13,15 @@ namespace wwwroot.agenda {
     public partial class Agendar {
         
         /// <summary>
+        /// Controle pnlPage.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlPage;
+        
+        /// <summary>
         /// Controle ddlTipoDocumento.
         /// </summary>
         /// <remarks>
@@ -85,6 +94,15 @@ namespace wwwroot.agenda {
         protected global::System.Web.UI.WebControls.TextBox txtData;
         
         /// <summary>
+        /// Controle btnBuscarHorarios.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnBuscarHorarios;
+        
+        /// <summary>
         /// Controle pnlHorarios.
         /// </summary>
         /// <remarks>
@@ -101,5 +119,14 @@ namespace wwwroot.agenda {
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdlistHorarios;
+        
+        /// <summary>
+        /// Controle btnAgendar.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAgendar;
     }
 }

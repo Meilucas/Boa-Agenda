@@ -9,11 +9,13 @@
     </style>
 </asp:Content>
 <asp:Content runat="server" ContentPlaceHolderID="body">
-    <fieldset>
+    <fieldset id="pnlPage" runat="server" >
         <legend>Agendar Atendimento</legend>
         <div class="container">
+
             <div class="form-group ">
                 <div class="form-inline">
+
                     <label class="col-md-2">Tipo de Consulta</label>
                     <div class="col-md-2">
                         <asp:DropDownList runat="server" ID="ddlTipoDocumento" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlTipoDocumento_SelectedIndexChanged">
@@ -33,6 +35,7 @@
                     <asp:Button Text="Buscar" runat="server" CssClass="btn btn-outline-success" ID="btnBuscarMedico" OnClick="btnBuscarMedico_Click" />
                 </div>
             </div>
+
         </div>
     </fieldset>
 
@@ -41,7 +44,7 @@
             <asp:HiddenField runat="server" ID="hdnIdMedico" Value="0" />
             <legend>Medicos</legend>
             <div>
-                <table>
+                <table class="table">
                     <tr>
                         <th>Medico</th>
                         <th>Endereço</th>
@@ -51,11 +54,13 @@
                         <asp:ListView runat="server" ID="lvMedicos" OnItemDataBound="lvMedicos_ItemDataBound">
                             <ItemTemplate>
                                 <td>
-                                    <asp:Literal Text="text" runat="server" ID="txtMedico" /></td>
+                                    <span>
+                                        <asp:Literal Text="text" runat="server" ID="txtMedico" /></span> </td>
                                 <td>
-                                    <asp:Literal Text="text" runat="server" ID="txtEndereco" /></td>
+                                    <span>
+                                        <asp:Literal Text="text" runat="server" ID="txtEndereco" /></span> </td>
                                 <td>
-                                    <asp:Button Text="Escolher" runat="server" ID="btnEscolherMedico" OnCommand="btnEscolherMedico_Command" CommandName="escolher" /></td>
+                                    <asp:Button Text="Escolher" runat="server" ID="btnEscolherMedico" OnCommand="btnEscolherMedico_Command" CommandName="escolher" CssClass="btn btn-outline-primary" /></td>
                             </ItemTemplate>
                         </asp:ListView>
                     </tr>
@@ -68,7 +73,10 @@
         <asp:PlaceHolder runat="server" ID="pnlData" Visible="false">
             <fieldset>
                 <legend>Data</legend>
-                <asp:TextBox runat="server" ID="txtData" TextMode="Date" CssClass="form-control" Width="50%" AutoPostBack="true" />
+                <div class="form-inline">
+                    <asp:TextBox runat="server" ID="txtData" TextMode="Date" CssClass="form-control" Width="50%" />
+                    <asp:Button Text="Buscar Horarios" runat="server" ID="btnBuscarHorarios" CssClass="btn btn-success" OnClick="btnBuscarHorarios_Click" />
+                </div>
             </fieldset>
 
 
@@ -84,6 +92,7 @@
                         </div>
                     </div>
                 </fieldset>
+                <asp:Button Text="Agendar" runat="server" ID="btnAgendar" CssClass="btn btn-outline-success" OnClick="btnAgendar_Click" />
             </asp:PlaceHolder>
         </asp:PlaceHolder>
     </asp:PlaceHolder>
