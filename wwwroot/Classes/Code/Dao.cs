@@ -11,8 +11,13 @@ namespace Classes.Code
     public class Dao
     {
         private string szConnection { get { return "Server=127.0.0.1;Database=boa_agenda;Uid=root;Pwd=root;"; } }
-       private readonly MySqlParameterCollection parametros = new MySqlCommand().Parameters;
-        public void AddParameter(string name, object value) { parametros.AddWithValue(name, value); }
+        private readonly MySqlParameterCollection parametros = new MySqlCommand().Parameters;
+
+        public void AddParameter(string name, object value)
+        {
+            parametros.AddWithValue(name, value);
+        }
+
         public DataTable ExecuteReader(string comand, CommandType type)
         {
             MySqlConnection connection = new MySqlConnection(szConnection);
@@ -43,6 +48,7 @@ namespace Classes.Code
                 parametros.Clear();
             }
         }
+
         public object ExecuteCommand(string comand, CommandType type)
         {
             MySqlConnection connection = new MySqlConnection(szConnection);
