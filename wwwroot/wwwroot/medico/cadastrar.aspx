@@ -27,14 +27,19 @@
         <div class="form-group">
             <div class="form-inline">
                 <label class="col-sm-1" for="txtCPF">CPF*</label>
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <asp:TextBox runat="server" CssClass="form-control cpf" ID="txtCPF" />
                     <asp:RequiredFieldValidator ErrorMessage="CPF" ControlToValidate="txtCPF" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" />
                 </div>
                 <label class="col-sm-1" for="txtRG">RG*</label>
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <asp:TextBox runat="server" CssClass="form-control rg" ID="txtRG" />
                     <asp:RequiredFieldValidator ErrorMessage="RG" ControlToValidate="txtRG" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" />
+                </div>
+                <label class="col-sm-1" for="txtRG">Documento*</label>
+                <div class="col-md-3">
+                    <asp:TextBox runat="server" CssClass="form-control doc" ID="txtDocumento" placeholder="CRM/CRO" />
+                    <asp:RequiredFieldValidator ErrorMessage="CRM/CRO" ControlToValidate="txtDocumento" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" />
                 </div>
             </div>
         </div>
@@ -154,6 +159,7 @@
             $('.tel').mask('(00) 0000-0000');
             $('.cel').mask('(00) 00000-0000');
             $('.cep').mask('00.00000-00');
+            $('.doc').mask('0000000');
         });
         function setValueEspec() {
             var options =$.makeArray( $('#lstLista').find('option').map(function (index, arr, ext) {
