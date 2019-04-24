@@ -40,6 +40,24 @@ namespace wwwroot.medico.Agenda {
         protected global::System.Web.UI.WebControls.ImageButton btnPequisar;
         
         /// <summary>
+        /// Controle rbAtivas.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton rbAtivas;
+        
+        /// <summary>
+        /// Controle tbInativas.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton tbInativas;
+        
+        /// <summary>
         /// Controle lvAgenda.
         /// </summary>
         /// <remarks>

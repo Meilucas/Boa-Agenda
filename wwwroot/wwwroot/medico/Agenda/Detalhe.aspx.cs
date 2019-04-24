@@ -35,7 +35,7 @@ namespace wwwroot.medico.Agenda
         {
             string id = Request.QueryString["id"].ToString();
             string query = "SELECT a.id_consulta,a.hora,a.dia, concat(u.nome, ' ', u.sobrenome) usuario,u.email ,u.cep,u.celular , concat(m.nome, ' ', m.sobrenome) as medico, " +
-                            "e.especialidade FROM agenda a inner join medico m inner join especialidade e inner join usuarios u where m.id_medico = a.atendente and e.id_especialidade = a.especialidade_id and u.id_usuario = a.usuario " +
+                            "e.especialidade ,a.ativa,a.obs FROM agenda a inner join medico m inner join especialidade e inner join usuarios u where m.id_medico = a.atendente and e.id_especialidade = a.especialidade_id and u.id_usuario = a.usuario " +
                             " and a.id_consulta = @id and m.id_medico = @medico";
             Dao db = new Dao();
             db.AddParameter("id", id);
@@ -51,6 +51,9 @@ namespace wwwroot.medico.Agenda
                     txtCelular.Text = td.Rows[0]["celular"].ToString();
                     txtEmail.Text = td.Rows[0]["email"].ToString();
                     txtEspecialidade.Text = td.Rows[0]["especialidade"].ToString();
+                    txtObs.Text = td.Rows[0]["obs"].ToString();
+                    rbCancelarSim.Checked = Convert.ToBoolean(td.Rows[0]["ativa"]);
+                    rbCancelarNao.Checked = !Convert.ToBoolean(td.Rows[0]["ativa"]);
                 }
             }
         }

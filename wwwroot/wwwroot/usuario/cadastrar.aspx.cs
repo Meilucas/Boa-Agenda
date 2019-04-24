@@ -25,16 +25,16 @@ namespace wwwroot.usuario
             {
                 // Verificar se a pagina é de edição ou cadastro 
                 // verifica se é edição do administrador
-                if (Request.QueryString["id"] != null)
+                if (Request.QueryString["id"] != null)  // Verifica se veio um id da url, se vim é porque ele vai editar um cadastro
                 {
                     try
                     {
-                        if (Session["tipo"] != null)
+                        if (Session["tipo"] != null) // verifica se esta logado
                         {
-                            if (Session["tipo"].ToString() != "0")
+                            if (Session["tipo"].ToString() != "0") // verifica se é um admin, so admin pode alterar cadastro de outras pessoas
                                 Response.Write("<script>alert('você não tem permição para editar esse cadastro');window.location.href = '/'</script>");
                             Session["IdEdicao"] = Convert.ToInt32(Request.QueryString["id"]);
-                            PreencheCampos((int)Session["IdEdicao"]);
+                            PreencheCampos((int)Session["IdEdicao"]);// pega o id passado na url e preenche o campos em tela
                         }
                         else
                         {
@@ -44,7 +44,7 @@ namespace wwwroot.usuario
                     }
                     catch (Exception ex)
                     {
-                        Response.Write("<script>alert('id invalido');</script>");
+                        Response.Write("<script>alert('id invalido');</script>"); 
                         return;
                     }
                 }
@@ -129,7 +129,7 @@ namespace wwwroot.usuario
         }
         private bool ValidaDados()
         {
-            if (txtCPF.Text.Length < 13)
+            if (IsCpf(txtCPF.Text))
             {
                 Response.Write("<script>alert(' CPF invalido');</script>");
                 return false;
@@ -213,6 +213,40 @@ namespace wwwroot.usuario
             }
         }
 
+        public static bool IsCpf(string cpf)
+        {
+            int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            string tempCpf;
+            string digito;
+            int soma;
+            int resto;
+            cpf = cpf.Trim();
+            cpf = cpf.Replace(".", "").Replace("-", ""); // remove pontos e traços
+            if (cpf.Length != 11)
+                return false;
+            tempCpf = cpf.Substring(0, 9);
+            soma = 0;
 
+            for (int i = 0; i < 9; i++)
+                soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
+            resto = soma % 11;
+            if (resto < 2)
+                resto = 0;
+            else
+                resto = 11 - resto;
+            digito = resto.ToString();
+            tempCpf = tempCpf + digito;
+            soma = 0;
+            for (int i = 0; i < 10; i++)
+                soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
+            resto = soma % 11;
+            if (resto < 2)
+                resto = 0;
+            else
+                resto = 11 - resto;
+            digito = digito + resto.ToString();
+            return cpf.EndsWith(digito);
+        }
     }
 }

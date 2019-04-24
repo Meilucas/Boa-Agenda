@@ -17,7 +17,7 @@ namespace wwwroot.medico
 
             if (!IsPostBack)
             {
-                // Verificar se a pagina é de edição ou cadastro 
+                // Verificar se a pagina é de edição ou cadastro  
                 // verifica se é edição do administrador
                 if (Request.QueryString["id"] != null)
                 {
