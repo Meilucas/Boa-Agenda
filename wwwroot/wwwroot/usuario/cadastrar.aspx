@@ -46,7 +46,7 @@
             <div class="form-inline">
                 <label class="col-sm-1" for="txtCep">Cep*</label>
                 <div class="col-md-3 ">
-                    <asp:TextBox runat="server" CssClass="form-control cep" ID="txtCep" />
+                    <asp:TextBox runat="server" CssClass="form-control cep" ID="txtCep" onblur="ProcurarEndereco()" />
                     <asp:RequiredFieldValidator ErrorMessage="CEP" ControlToValidate="txtCep" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" />
                 </div>
                 <label class="col-sm-1" for="txtEndereco">Endereço</label>
@@ -131,8 +131,23 @@
             $('.numero').mask('0000');
             $('.tel').mask('(00) 0000-0000');
             $('.cel').mask('(00) 00000-0000');
-            $('.cep').mask('0000000-00');
+            $('.cep').mask('00000-000');
         });
+
+
+        function ProcurarEndereco() {
+            if ($('#txtCep').val().length > 8) {
+                $.ajax({
+                    type: 'GET',
+                    url: "https://viacep.com.br/ws/" + $('#txtCep').val() + "/json/",
+                    success: function (data) {
+                        console.log(data);
+                        $('#txtEndereco').val(data.logradouro)
+                    }
+                });
+            }
+
+        }
     </script>
 
 </asp:Content>

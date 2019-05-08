@@ -31,7 +31,8 @@ CREATE TABLE `agenda` (
   `usuario` int(11) DEFAULT NULL,
   `atendente` int(11) DEFAULT NULL,
   `especialidade_id` int(11) DEFAULT NULL,
-  `cancelada` bit(1) DEFAULT b'0',
+  `ativa` bit(1) DEFAULT b'1',
+  `obs` text,
   PRIMARY KEY (`id_consulta`),
   KEY `FK_usuarios_Medico_idx` (`usuario`),
   KEY `FK_Atendente_idx` (`atendente`),
@@ -48,7 +49,7 @@ CREATE TABLE `agenda` (
 
 LOCK TABLES `agenda` WRITE;
 /*!40000 ALTER TABLE `agenda` DISABLE KEYS */;
-INSERT INTO `agenda` VALUES (2,'13:30:00','2019-03-06',1,5,1,_binary '\0');
+INSERT INTO `agenda` VALUES (2,'13:30:00','2019-03-06',1,5,1,_binary '\0',NULL);
 /*!40000 ALTER TABLE `agenda` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,6 +100,7 @@ CREATE TABLE `medico` (
   `cpf` varchar(15) DEFAULT NULL,
   `rg` varchar(15) DEFAULT NULL,
   `documento` varchar(12) DEFAULT NULL,
+  `registro` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`id_medico`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -109,7 +111,7 @@ CREATE TABLE `medico` (
 
 LOCK TABLES `medico` WRITE;
 /*!40000 ALTER TABLE `medico` DISABLE KEYS */;
-INSERT INTO `medico` VALUES (5,'Kiko','Leandro Bruno ','08.69021-5','(11) 1111-1111','(11) 11111-1111','77','blublucas@gmail.com','123454','123454','','111.111.111-11','11.111.111-11','CRM');
+INSERT INTO `medico` VALUES (5,'Kiko','Leandro Bruno ','08.69021-5','(11) 1111-1111','(11) 11111-1111','77','blublucas@gmail.com','123454','123454','','111.111.111-11','11.111.111-11','CRM',NULL);
 /*!40000 ALTER TABLE `medico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -243,7 +245,8 @@ IN `_login` VARCHAR(8),
  IN `_endereco` VARCHAR(70), 
  IN `_cpf` VARCHAR(15), 
  IN `_rg` VARCHAR(15),  
- IN `_documento` varchar(4))
+ IN `_documento` varchar(4),
+ IN `_registro` VARCHAR(15))
 begin
 DECLARE EXIT HANDLER for SQLEXCEPTION
 begin
@@ -265,7 +268,8 @@ end;
 					,`endereco`
 					,`cpf`
 					,`rg`
-					,`documento`) 
+					,`documento`
+                    ,`registro`) 
 					VALUES (
 					`_nome`
 					,`_sobrenome`
@@ -280,7 +284,7 @@ end;
 					,`_cpf`
 					,`_rg`
 					,`_documento`
-					);
+					,`_registro`);
 				SELECT last_insert_id();
 			else
 				SELECT 'login ja cadastrado';
@@ -392,7 +396,8 @@ IN `_nome` VARCHAR(50),
  IN `_senha` VARCHAR(8), 
  IN `_endereco` VARCHAR(70), 
  IN `_cpf` VARCHAR(15), 
- IN `_rg` VARCHAR(15))
+ IN `_rg` VARCHAR(15),
+ IN `_registro` VARCHAR(15))
 BEGIN
  
 IF(!EXISTS(SELECT (1) FROM `medico` WHERE cpf = _cpf and id_medico != _id) OR
@@ -411,7 +416,8 @@ SET
     `senha` = `_senha`,
     `endereco` = `_endereco`,
     `cpf` = `_cpf`,
-    `rg` = `_rg`    
+    `rg` = `_rg`,
+    `registro`=`_registro`
 WHERE
     `id_medico` = `_id`;
 SELECT
@@ -491,4 +497,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-22 16:06:59
+-- Dump completed on 2019-05-08 17:34:55

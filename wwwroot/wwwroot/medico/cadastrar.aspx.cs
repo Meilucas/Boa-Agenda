@@ -162,6 +162,9 @@ namespace wwwroot.medico
             dao.AddParameter("_endereco", txtEndereco.Text);
             dao.AddParameter("_cpf", txtCPF.Text);
             dao.AddParameter("_rg", txtRG.Text);
+
+            dao.AddParameter("_registro", txtDocumento.Text);
+
             var retorno = dao.ExecuteCommand("pr_up_medico", CommandType.StoredProcedure);
             bool insert = false;
             try

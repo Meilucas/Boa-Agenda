@@ -13,7 +13,7 @@ namespace wwwroot.usuario {
     public partial class cadastrar {
         
         /// <summary>
-        /// Controle txtNome.
+        /// Controle txtNome. 
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
