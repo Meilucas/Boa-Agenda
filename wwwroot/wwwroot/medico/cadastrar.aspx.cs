@@ -73,7 +73,7 @@ namespace wwwroot.medico
 
             dt = dao.ExecuteReader(command, CommandType.Text);
 
-            lstLista.DataSource = dt;
+            lstLista.DataSource = dt; 
             lstLista.DataValueField = "id_especialidade";
             lstLista.DataTextField = "especialidade";
             lstLista.DataBind();
