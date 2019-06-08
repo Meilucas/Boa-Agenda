@@ -38,7 +38,7 @@ namespace wwwroot.medico.Agenda
             Dao db = new Dao();
             db.AddParameter("dia", txtData.Text);
             db.AddParameter("user", Session["id"].ToString());
-            db.AddParameter("ativa", true);
+            db.AddParameter("ativa", rbAtivas.Checked);
             DataTable tb = db.ExecuteReader("select id_consulta, hora, dia, concat(nome, ' ', sobrenome) as nome, email , telefone, celular,ativa ,e.especialidade from agenda a inner join usuarios u inner join especialidade e where a.usuario = u.id_usuario and e.id_especialidade = a.especialidade_id and dia = @dia and atendente = @user and ativa = @ativa   ", CommandType.Text);
             if (tb != null)
             {

@@ -81,6 +81,7 @@
   <ItemGroup>
     <Content Include="agenda\Agendar.aspx" />
     <Content Include="agenda\Default.aspx" />
+    <Content Include="agenda\Detalhe.aspx" />
     <Content Include="css\jquery-ui.css" />
     <Content Include="css\jquery-ui.structure.css" />
     <Content Include="css\jquery-ui.theme.css" />
@@ -132,6 +133,13 @@
     </Compile>
     <Compile Include="agenda\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="agenda\Detalhe.aspx.cs">
+      <DependentUpon>Detalhe.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="agenda\Detalhe.aspx.designer.cs">
+      <DependentUpon>Detalhe.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

@@ -37,10 +37,7 @@
                             <asp:Literal Text="text" runat="server" ID="txtCelular" /></td>
                         <td>
                             <asp:HyperLink NavigateUrl="navigateurl" runat="server" ID="hlkDetail" Target="_self" Text="Detalhe" CssClass="btn btn-success" />
-                        </td>
-                         <td>
-                             <asp:Button Text="text" runat="server" ID="btnFinalizar" CommandArgument="" OnCommand="btnFinalizar_Command" CommandName="Finalizar" CssClass="btn btn-warning"  />                          
-                        </td>
+                        </td>                        
                     </tr>
                 </ItemTemplate>
             </asp:ListView>             

@@ -7,8 +7,8 @@
             <asp:TextBox runat="server" ID="txtData" CssClass="form-control" TextMode="Date" />
             <asp:ImageButton ImageUrl="~/img/icons/lupa.png" AlternateText="pesquisar" runat="server" ID="btnPequisar" OnClick="btnPequisar_Click" CssClass="icon" />
 
-            <asp:RadioButton Text="Ativas" runat="server" ID="rbAtivas" />
-              <asp:RadioButton Text="Inativas" runat="server" ID="tbInativas" />
+            <asp:RadioButton Text="Ativas" runat="server" ID="rbAtivas" GroupName="ativas" />
+              <asp:RadioButton Text="Inativas" runat="server" ID="tbInativas" GroupName="ativas" />
         </div>
         <table class="table table-hover">
             <thead>

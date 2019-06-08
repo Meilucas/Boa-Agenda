@@ -7,29 +7,29 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace wwwroot.medico.Agenda
+namespace wwwroot.agenda
 {
     public partial class Detalhe : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
 
-             if (!IsPostBack)
-             {
-                 pnlBody.Visible = false;
-                 if (Session["id"] != null)
-                 {
-                     if (Session["tipo"].ToString() == "1" || Session["tipo"].ToString() == "0")
-                     {
-                         pnlBody.Visible = true;
-                          PreencherCampos();
-                     }
-                     else
-                         Response.Write("<script>alert('Desculpe mas essa pagina é somente para usuarios');window.location.href = '/'</script>");
-                 }
-                 else
-                     Response.Write("<script>alert('Efetue login como medico para liberar a pagina');</script>");
-             }
+            if (!IsPostBack)
+            {
+                pnlBody.Visible = false;
+                if (Session["id"] != null)
+                {
+                    if (Session["tipo"].ToString() == "2" || Session["tipo"].ToString() == "0")
+                    {
+                        pnlBody.Visible = true;
+                        PreencherCampos();
+                    }
+                    else
+                        Response.Write("<script>alert('Desculpe mas essa pagina é somente para Medicos');window.location.href = '/'</script>");
+                }
+                else
+                    Response.Write("<script>alert('Efetue login como medico para liberar a pagina');</script>");
+            }
         }
 
         public void PreencherCampos()
@@ -63,7 +63,7 @@ namespace wwwroot.medico.Agenda
         {
             Dao db = new Dao();
             db.AddParameter("obs", txtObs.Text);
-            db.AddParameter("ativa",rbCancelarSim.Checked);
+            db.AddParameter("ativa", rbCancelarSim.Checked);
             db.AddParameter("id", Request.QueryString["id"].ToString());
             db.ExecuteCommand("update agenda set obs = @obs, ativa = @ativa where id_consulta = @id", CommandType.Text);
             Response.Write("<script>alert('Dados atualizados com sucesso')</script>");
