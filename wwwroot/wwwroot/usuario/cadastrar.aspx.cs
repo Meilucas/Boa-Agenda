@@ -129,7 +129,7 @@ namespace wwwroot.usuario
         }
         private bool ValidaDados()
         {
-            if (IsCpf(txtCPF.Text))
+            if (!IsCpf(txtCPF.Text))
             {
                 Response.Write("<script>alert(' CPF invalido');</script>");
                 return false;
