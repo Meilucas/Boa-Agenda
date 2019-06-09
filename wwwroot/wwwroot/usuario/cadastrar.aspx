@@ -38,7 +38,7 @@
                     <asp:RequiredFieldValidator ErrorMessage="CPF" ControlToValidate="txtRG" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" />
                 </div>
             </div>
-        </div>    
+        </div>
     </fieldset>
     <fieldset>
         <legend>Endereco</legend>
@@ -46,12 +46,12 @@
             <div class="form-inline">
                 <label class="col-sm-1" for="txtCep">Cep*</label>
                 <div class="col-md-3 ">
-                    <asp:TextBox runat="server" CssClass="form-control cep" ID="txtCep" onblur="ProcurarEndereco()" />
+                    <asp:TextBox runat="server" ClientIDMode="Static" CssClass="form-control cep" ID="txtCep" onblur="ProcurarEndereco()" />
                     <asp:RequiredFieldValidator ErrorMessage="CEP" ControlToValidate="txtCep" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" />
                 </div>
                 <label class="col-sm-1" for="txtEndereco">Endereço</label>
                 <div class="col-md-4">
-                    <asp:TextBox runat="server" CssClass="form-control" ID="txtEndereco" />
+                    <asp:TextBox runat="server" ClientIDMode="Static" CssClass="form-control" ID="txtEndereco" />
                 </div>
                 <label class="col-sm-1" for="txtnumero">Nº*</label>
                 <div class="col-md-2">
@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-    </fieldset>   
+    </fieldset>
     <fieldset>
         <legend>Acesso</legend>
         <div class="form-group">
@@ -88,12 +88,10 @@
 
                 <div class="col-md-3">
                     Login*
-                    <asp:TextBox runat="server" CssClass="form-control" ID="txtLogin" />
-                    <asp:RegularExpressionValidator ValidationExpression="^\d{4,8}$" ErrorMessage="O login deve conter de 4 a caracteres 8 " ControlToValidate="txtLogin" runat="server" ValidationGroup="validation" Display="None" />
+                    <asp:TextBox runat="server" CssClass="form-control" ID="txtLogin" ClientIDMode="Static" />
                 </div>
 
                 <div class="col-md-3">Senha*<asp:TextBox runat="server" CssClass="form-control" ID="txtSenha" TextMode="Password" /></div>
-                <asp:RegularExpressionValidator ValidationExpression="^\d{4,8}$" ErrorMessage="senha deve conter de 4 a caracteres 8" ForeColor="Red" Display="None" ControlToValidate="txtSenha" runat="server" ValidationGroup="validation" />
                 <asp:RequiredFieldValidator ErrorMessage="Senha" ControlToValidate="txtSenha" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" BorderColor="Red" />
                 <asp:CompareValidator ErrorMessage="As senhas não conferem " ControlToValidate="txtSenha" runat="server" ControlToCompare="txtSenha2" ValidationGroup="validation" Display="None" />
 

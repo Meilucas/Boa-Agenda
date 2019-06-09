@@ -13,27 +13,30 @@ namespace wwwroot.agenda
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            pnlBody.Visible = false;
-            if (Session["id"] != null)
+            if (!IsPostBack)
             {
-                if (Session["tipo"].ToString() == "1" || Session["tipo"].ToString() == "0")
+                pnlBody.Visible = false;
+                if (Session["id"] != null)
                 {
-                    pnlBody.Visible = true;
+                    if (Session["tipo"].ToString() == "1" || Session["tipo"].ToString() == "0")
+                    {
+                        pnlBody.Visible = true;
+                    }
+                    else
+                        Response.Write("<script>alert('Desculpe mas essa pagina é somente para usuarios');window.location.href = '/'</script>");
                 }
                 else
-                    Response.Write("<script>alert('Desculpe mas essa pagina é somente para usuarios');window.location.href = '/'</script>");
+                    Response.Write("<script>alert('Efetue login como medico para liberar a pagina');</script>");
             }
-            else
-                Response.Write("<script>alert('Efetue login como medico para liberar a pagina');</script>");
         }
 
         protected void btnPequisar_Click(object sender, ImageClickEventArgs e)
         {
             Dao db = new Dao();
-            db.AddParameter("data", txtData.Text);
+
             db.AddParameter("ativa", rbAtivas.Checked);
             db.AddParameter("usuario", Session["id"].ToString());
-            DataTable tb = db.ExecuteReader("select * from usuarios u inner join agenda a on a.id_consulta = u.id_usuario where a.dia like '%@data%' and id_usuario = @usuario", CommandType.Text);
+            DataTable tb = db.ExecuteReader("select * from usuarios u inner join agenda a on a.id_consulta = u.id_usuario where a.dia = '"+ DateTime.Parse(txtData.Text).ToString("yyyy-MM-dd") + "' and a.usuario = @usuario", CommandType.Text);
             lvAgenda.DataSource = tb.Rows;
             lvAgenda.DataBind();
         }

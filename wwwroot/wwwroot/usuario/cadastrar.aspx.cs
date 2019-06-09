@@ -139,9 +139,19 @@ namespace wwwroot.usuario
                 Response.Write("<script>alert(' RG invalido');</script>");
                 return false;
             }
-            else if (txtCep.Text.Length < 10)
+            else if (txtCep.Text.Length < 8 )
             {
                 Response.Write("<script>alert(' CEP invalido');</script>");
+                return false;
+            }
+            else if (txtLogin.Text.Length < 4 && txtLogin.Text.Length > 8)
+            {
+                Response.Write("<script>alert(' O login deve conter de 4 a caracteres 8');</script>");
+                return false;            
+            }
+            else if (txtSenha.Text.Length < 4 && txtSenha.Text.Length > 8)
+            {
+                Response.Write("<script>alert(' O Senha deve conter de 4 a caracteres 8');</script>");
                 return false;
             }
             return true;

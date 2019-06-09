@@ -19,7 +19,7 @@ namespace wwwroot.agenda
                 pnlBody.Visible = false;
                 if (Session["id"] != null)
                 {
-                    if (Session["tipo"].ToString() == "2" || Session["tipo"].ToString() == "0")
+                    if (Session["tipo"].ToString() == "1" || Session["tipo"].ToString() == "0")
                     {
                         pnlBody.Visible = true;
                         PreencherCampos();
@@ -37,7 +37,7 @@ namespace wwwroot.agenda
             string id = Request.QueryString["id"].ToString();
             string query = "SELECT a.id_consulta,a.hora,a.dia, concat(u.nome, ' ', u.sobrenome) usuario,u.email ,u.cep,u.celular , concat(m.nome, ' ', m.sobrenome) as medico, " +
                             "e.especialidade ,a.ativa,a.obs FROM agenda a inner join medico m inner join especialidade e inner join usuarios u where m.id_medico = a.atendente and e.id_especialidade = a.especialidade_id and u.id_usuario = a.usuario " +
-                            " and a.id_consulta = @id and m.id_medico = @medico";
+                            " and a.id_consulta = @id";
             Dao db = new Dao();
             db.AddParameter("id", id);
             db.AddParameter("medico", Session["id"]);

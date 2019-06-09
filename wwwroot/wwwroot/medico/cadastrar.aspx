@@ -1,4 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="cadastrar.aspx.cs" Inherits="wwwroot.medico.cadastrar" MasterPageFile="~/Master.Master" %>
+
 <asp:Content runat="server" ContentPlaceHolderID="head">
     <style>
         .form-control {
@@ -44,14 +45,14 @@
             </div>
         </div>
         <div>
-            <asp:Panel runat="server" ID="pnlTipoUsuario">               
+            <asp:Panel runat="server" ID="pnlTipoUsuario">
                 <div class="col-6">
                     <asp:DropDownList runat="server" ID="ddlDocumento" CssClass="form-control" OnSelectedIndexChanged="ddlDocumento_SelectedIndexChanged" AutoPostBack="true">
-                          <asp:ListItem Text="Selecione o Tipo" Value="" />
+                        <asp:ListItem Text="Selecione o Tipo" Value="" />
                         <asp:ListItem Text="Medico" Value="CRM" />
                         <asp:ListItem Text="Dentista" Value="CRO" />
                     </asp:DropDownList>
-                    <asp:RequiredFieldValidator ErrorMessage="Selecione o tipo" ControlToValidate="ddlDocumento" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation"/>
+                    <asp:RequiredFieldValidator ErrorMessage="Selecione o tipo" ControlToValidate="ddlDocumento" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" />
                 </div>
             </asp:Panel>
         </div>
@@ -63,11 +64,11 @@
                 <label class="col-sm-1" for="txtCep">Cep*</label>
                 <div class="col-md-3 ">
                     <asp:TextBox runat="server" CssClass="form-control cep" ID="txtCep" ClientIDMode="Static" onblur="ProcurarEndereco()" />
-                    <asp:RequiredFieldValidator ErrorMessage="CEP" ControlToValidate="txtCep" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation"  />
+                    <asp:RequiredFieldValidator ErrorMessage="CEP" ControlToValidate="txtCep" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" />
                 </div>
                 <label class="col-sm-1" for="txtEndereco">Endereço</label>
                 <div class="col-md-4">
-                    <asp:TextBox runat="server" CssClass="form-control" ID="txtEndereco"  ClientIDMode="Static" />
+                    <asp:TextBox runat="server" CssClass="form-control" ID="txtEndereco" ClientIDMode="Static" />
                 </div>
                 <label class="col-sm-1" for="txtnumero">Nº*</label>
                 <div class="col-md-2">
@@ -101,10 +102,10 @@
         <legend>Especialidade</legend>
         <asp:ListBox runat="server" ID="lstEspecialidade" SelectionMode="Multiple" Rows="7" CssClass="sortable" ValidateRequestMode="Disabled" DataTextField="especialidade" DataValueField="id_especialidade" AppendDataBoundItems="true" ClientIDMode="Static"></asp:ListBox>
         <a href="#" id="btnAdicionar">Adicionar</a>
-        <a href="#" id="btnRemove">Remover</a>        
-        <asp:HiddenField  runat="server" ID="hdnEspecialidades" value="" ClientIDMode="Static"/>
-        <select Multiple="true" size="7" class="sortable" ID="lstLista" runat="server" ClientIDMode="Static"></select>
-    
+        <a href="#" id="btnRemove">Remover</a>
+        <asp:HiddenField runat="server" ID="hdnEspecialidades" Value="" ClientIDMode="Static" />
+        <select multiple="true" size="7" class="sortable" id="lstLista" runat="server" clientidmode="Static"></select>
+
     </fieldset>
     <fieldset>
         <legend>Acesso</legend>
@@ -114,11 +115,9 @@
                 <div class="col-md-3">
                     Login*
                     <asp:TextBox runat="server" CssClass="form-control" ID="txtLogin" />
-                    <asp:RegularExpressionValidator ValidationExpression="^\d{4,8}$" ErrorMessage="O login deve conter de 4 a caracteres 8 " ControlToValidate="txtLogin" runat="server" ValidationGroup="validation" Display="None" />
                 </div>
 
                 <div class="col-md-3">Senha*<asp:TextBox runat="server" CssClass="form-control" ID="txtSenha" TextMode="Password" /></div>
-                <asp:RegularExpressionValidator ValidationExpression="^\d{4,8}$" ErrorMessage="senha deve conter de 4 a caracteres 8" ForeColor="Red" Display="None" ControlToValidate="txtSenha" runat="server" ValidationGroup="validation" />
                 <asp:RequiredFieldValidator ErrorMessage="Senha" ControlToValidate="txtSenha" runat="server" ForeColor="Red" Display="None" ValidationGroup="validation" BorderColor="Red" />
                 <asp:CompareValidator ErrorMessage="As senhas não conferem " ControlToValidate="txtSenha" runat="server" ControlToCompare="txtSenha2" ValidationGroup="validation" Display="None" />
 
@@ -137,7 +136,7 @@
     <script src="/scripts/jquery-ui.js"></script>
     <script src="/scripts/jquery.selectlistactions.js"></script>
     <script>
-        $(function () {            
+        $(function () {
             $('#ddlDocumento').on('change', function () {
                 alert($('#ddlDocumento').find('option [selected="true"] '));
 
@@ -162,7 +161,7 @@
             $('.doc').mask('0000000');
         });
         function setValueEspec() {
-            var options =$.makeArray( $('#lstLista').find('option').map(function (index, arr, ext) {
+            var options = $.makeArray($('#lstLista').find('option').map(function (index, arr, ext) {
                 return $(arr).val()
             }));
 
@@ -179,7 +178,7 @@
                     }
                 });
             }
-            
+
         }
     </script>
 

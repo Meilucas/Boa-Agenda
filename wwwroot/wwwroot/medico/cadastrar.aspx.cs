@@ -105,9 +105,19 @@ namespace wwwroot.medico
                 Response.Write("<script>alert(' RG invalido');</script>");
                 return false;
             }
-            else if (txtCep.Text.Length < 10)
+            else if (txtCep.Text.Length < 8)
             {
                 Response.Write("<script>alert(' CEP invalido');</script>");
+                return false;
+            }
+            else if (txtLogin.Text.Length < 4 && txtLogin.Text.Length > 8)
+            {
+                Response.Write("<script>alert(' O login deve conter de 4 a caracteres 8');</script>");
+                return false;
+            }
+            else if (txtSenha.Text.Length < 4 && txtSenha.Text.Length > 8)
+            {
+                Response.Write("<script>alert(' O Senha deve conter de 4 a caracteres 8');</script>");
                 return false;
             }
             else if (hdnEspecialidades.Value.Split(",".ToCharArray()).Count() == 0)
@@ -205,6 +215,7 @@ namespace wwwroot.medico
             dao.AddParameter("_endereco", txtEndereco.Text);
             dao.AddParameter("_cpf", txtCPF.Text);
             dao.AddParameter("_rg", txtRG.Text);
+            dao.AddParameter("_registro", txtDocumento.Text);
             if (ddlDocumento.SelectedValue == "CRM")
                 dao.AddParameter("_documento", "CRM");
             else
@@ -218,7 +229,7 @@ namespace wwwroot.medico
                 if (result > 0)
                 {
                     string szEsp = Salva_especialidade(result);
-                    Response.Write("<script>alert('" + msg + "');window.location.href = '/'</script>");
+                    Response.Write("<script>alert('Cadastrado com sucesso');window.location.href = '/'</script>");
                 }
                 else
                     Response.Write("<script>alert('" + msg + "');</script>");
@@ -253,6 +264,7 @@ namespace wwwroot.medico
                 txtCPF.Text = rd.Rows[0]["cpf"].ToString();
                 txtRG.Text = rd.Rows[0]["rg"].ToString();
                 ddlDocumento.SelectedValue = rd.Rows[0]["documento"].ToString();
+                txtDocumento.Text = rd.Rows[0]["registro"].ToString();
                 ddlDocumento.Enabled = false;
                 CarregaEspecialidades(id);
 
